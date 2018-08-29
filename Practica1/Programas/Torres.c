@@ -1,6 +1,4 @@
 /*
-	Autores: 
-
 */
 
 #include <stdio.h>
@@ -13,7 +11,7 @@ int v = 0;
 // Prototipo de funciones
 
 void hanoi(int n, int disco, int **M, int origen, int destino, int aux);
-void mover(int n, int disco, int **M, int o, int d);
+void mover(int disco, int **M, int o, int d);
 
 // Funcion principal
 int main(void)
@@ -48,7 +46,7 @@ void hanoi(int n, int disco, int **M, int origen, int destino, int aux)
 {
 	// Caso base: Solucion al caso de un disco.
 	if (disco == 1)
-		mover(n, disco, M, origen, destino);
+		mover(disco, M, origen, destino);
 	
 	else // Caso recursivo
 	{
@@ -62,7 +60,7 @@ void hanoi(int n, int disco, int **M, int origen, int destino, int aux)
 		hanoi(n, disco-1, M, origen, aux, destino);
 
 		// Mueve el disco del origen al destino
-		mover(n, disco, M, origen, destino);
+		mover(disco, M, origen, destino);
 
 		/*
 			Se llama recursivamente bajando el numero de
@@ -74,10 +72,9 @@ void hanoi(int n, int disco, int **M, int origen, int destino, int aux)
 	return;
 }
 
-void mover(int n, int disco, int **M, int o, int d)
+void mover(int disco, int **M, int o, int d)
 {
-	int i = 0, y;
-
+	int i = 0;
 	// Imprime el movimiento
 	printf("%d Mover de %c a %c \n ", v, o+65, d+65);
 	v++;
