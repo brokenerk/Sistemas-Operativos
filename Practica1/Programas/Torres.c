@@ -14,16 +14,13 @@ int v = 0;
 
 void hanoi(int n, int disco, int **M, int origen, int destino, int aux);
 void mover(int n, int disco, int **M, int o, int d);
-void torre(int n, int **M, int t);
-void sacar(int n, int disco, int t);
-void matriz(int n, int **M);
 
 // Funcion principal
 int main(void)
 {
-	int i, j, num, **A;
-	printf("\n Ingrese el numero de discos: ");
-	scanf("%d", &num);
+	int i, j, n, **A;
+	printf("\nIngrese el numero de discos: ");
+	scanf("%d", &n);
 
 	// Arreglo que contiene el numero de discos	
 	A = malloc(3*sizeof(int*));
@@ -32,14 +29,10 @@ int main(void)
 	for(i=0; i<n; i++)
 		A[0][i] = i + 1;
 
-	// Arma el estado inicial de las torres
-	for(i=0; i<3; i++)
-		torre(n, A, i);
-
 	// Llamada a la función que resuelve el caso de n discos
 	hanoi(n, n, A, 0, 2, 1);
 
-	printf("\n Movimientos realizados %d \n", v);
+	printf("\n \n Movimientos realizados %d \n", v);
 	return 0;
 }
 
@@ -51,7 +44,7 @@ int main(void)
 	estan los discos, la torre a donde se quiere mover 
 	los disco y la torre auxiliar.
 */
-void hanoi(int n, int disco, int **M, int origen, int destino, int aux);
+void hanoi(int n, int disco, int **M, int origen, int destino, int aux)
 {
 	// Caso base: Solucion al caso de un disco.
 	if (disco == 1)
@@ -86,7 +79,7 @@ void mover(int n, int disco, int **M, int o, int d)
 	int i = 0, y;
 
 	// Imprime el movimiento
-	printf(" %d Mover de %c a %c ", v, o+65, d+65);
+	printf("%d Mover de %c a %c \n ", v, o+65, d+65);
 	v++;
 	// Coloca el movimiento del disco en la matriz
 	while(M[o][i]!=disco)
