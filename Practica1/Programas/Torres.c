@@ -59,7 +59,7 @@ void mover(int disco, int **M, int o, int d)
 {
 	int i = 0;
 	// Imprime el movimiento
-	printf("%d Mover de %c a %c \n ", v, o+65, d+65);
+	printf(" \n\t%d \tMover de %c a %c", v+1, o+65, d+65);
 	v++;
 	// Coloca el movimiento del disco en la matriz
 	while(M[o][i]!=disco)
