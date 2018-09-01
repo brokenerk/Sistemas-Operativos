@@ -48,15 +48,18 @@ int main(void)
 		else
 		{
 			// putchar(UCaracter); printf(" COMPARA"); putchar(E.x); printf("\n"); 				
-			if((UCaracter == '(' ) && (E.x == ')'))
-				E = pop(&A);
-
-			else if((UCaracter == '{' ) && (E.x == '}'))
-				E = pop(&A);
-
-			else if((UCaracter == '[' ) && (E.x == ']'))
-				E = pop(&A);
-
+			if((UCaracter == '(' ) && (E.x == ')') || (UCaracter == '{' ) && (E.x == '}') || (UCaracter == '[' ) && (E.x == ']'))
+			{
+				if(empty(&A) == TRUE) //Y si la pila esta vacía
+				{
+					//Marca el tipo de error 1
+					printf("\n>>>>>>Error 1, un parentesis intenta cerrar y no ha sido abierto<<<<<\n");
+					exit(1); //Sale porque la evaluación ya no tendría caso
+					break;
+				}
+				else 
+					E=pop(&A); //y en la pila hay algun elemento, desempila el elemento
+			}
 			else
 			{
 				printf("ERROR, Los parentesis no estan bien acomodados\n");
