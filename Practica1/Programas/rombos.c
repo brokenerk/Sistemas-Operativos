@@ -1,6 +1,7 @@
 #include<stdio.h>
 
 void archivo(int N){
+	//Creamos el tipo de dato FILE
 	FILE* archivo;
 	archivo=fopen("salida.txt","w"); 
 	if(archivo!=NULL)
@@ -132,10 +133,10 @@ int main (){
 	printf("Ingresa el numero de asteriscos que tendra: ");
 	scanf("%d", &N);
 
-	do{
+	while(N%2 || !((N/2)%2)){
 		printf("Imposible dibujar. Ingrese otro numero: ");
 		scanf("%d", &N);
-	}while(N%2 || !((N/2)%2));
+	}
 	
 	asteriscos(N/2);
 	printf("\nGuardar en archivo? Si=1/No=0: ");
