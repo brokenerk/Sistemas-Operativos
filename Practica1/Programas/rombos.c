@@ -143,4 +143,5 @@ int main (){
 		scanf("%d",&resp);
 		if(resp==1)
 			archivo(N/2);
+	return 0;
 }
