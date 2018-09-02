@@ -13,7 +13,7 @@ void archivo(int N){
 		aux=aux1;
 		ini=N/2;
 		fin=ini;
-		for(int i=0;i<=aux/2;i++){
+		for(int i=0;i<aux/2;i++){
 			for (int j=0;j<aux;j++){
 				if (j==ini || j==fin){
 					fprintf(archivo, "*");
@@ -40,7 +40,7 @@ void archivo(int N){
 		ini++;
 		fin--;
 		fprintf(archivo, "\n");
-		for(int i=0;i<=(aux/2);i++){
+		for(int i=0;i<aux/2;i++){
 			for (int j=0;j<aux;j++){
 				if (j==ini || j==fin){
 					fprintf(archivo, "*");
@@ -77,7 +77,7 @@ void asteriscos(int N){
 	aux=aux1;
 	ini=N/2;
 	fin=ini;
-	for(int i=0;i<=aux/2;i++){
+	for(int i=0;i<aux/2;i++){
 		for (int j=0;j<aux;j++){
 			if (j==ini || j==fin){
 				printf("*");
@@ -104,7 +104,7 @@ void asteriscos(int N){
 	ini++;
 	fin--;
 	printf("\n");
-	for(int i=0;i<=(aux/2);i++){
+	for(int i=0;i<(aux/2);i++){
 		for (int j=0;j<aux;j++){
 			if (j==ini || j==fin){
 				printf("*");
@@ -130,11 +130,11 @@ void asteriscos(int N){
 int main (){
 	int N, resp;
 
-	printf("Ingresa el numero de asteriscos que tendra: ");
+	printf("Ingresa el numero (entre 0 y 40) de asteriscos que tendra: ");
 	scanf("%d", &N);
 
-	while(N%2 || !((N/2)%2)){
-		printf("Imposible dibujar. Ingrese otro numero: ");
+	while(N%2 || !((N/2)%2) || N<0 || N>40){
+		printf("Imposible dibujar o fuera del rango. Ingrese otro numero: ");
 		scanf("%d", &N);
 	}
 	
