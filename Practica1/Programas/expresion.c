@@ -131,7 +131,7 @@ int main(){
 	actx=1;
 	acty=0;
 	acta=linea[0];
-	for(int i=1;i<n;i++){
+	for(int i=0;i<n;i++){
 		estado(linea[i]);
 	}
 	printf("Resultado: %.2f\n", res);
