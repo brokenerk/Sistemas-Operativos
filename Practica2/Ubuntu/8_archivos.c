@@ -16,28 +16,37 @@ char* leerDirectorio(){
 }
 
 void escribirArchivo(int archivo_abierto, char content[10][1000], int k, int r, char* ruta){
-	for(int j=0 ; j<r*5 ; j++)
-	{
-    	if(write(archivo_abierto, content[k], strlen(content[k])) == strlen (content[k]))
-    	{
-    		if(k==r-1 && k==j)
-    		{
-    			printf("%d Archivos creados\n", r);
-    		}
-    	}
-    	else
-    	{
-    		perror(ruta);
-    		exit(EXIT_FAILURE);
-    	}
-
-    }
-    				
-    if(close(archivo_abierto) != 0 )
+	if(archivo_abierto == -1)
     {
-    	perror(ruta);
-    	exit(EXIT_FAILURE);
+        perror(ruta);
+        exit(EXIT_FAILURE);
     }
+    else
+    {
+        for(int j=0 ; j<r*5 ; j++)//Escribimos 5 veces el texto en el archivo
+        {
+            if(write(archivo_abierto, content[k], strlen(content[k])) == strlen (content[k]))
+            {
+                if(k==r-1 && k==j)
+                {
+                    printf("%d Archivos creados\n", r);
+                }
+            }
+            else
+            {
+                perror(ruta);
+                exit(EXIT_FAILURE);
+            }
+
+        }
+                     
+        if(close(archivo_abierto) != 0 )
+        {
+            perror(ruta);
+            exit(EXIT_FAILURE);
+        }
+    }
+    
 }
 
 int main(int argc, const char *argv[])
