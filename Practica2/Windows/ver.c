@@ -4,7 +4,6 @@
   
 #include <time.h>  
 #include <sys/types.h>
-#include <wchar.h>  
 #include <sys/stat.h>  
 #include <stdio.h>  
 #include <errno.h>  
