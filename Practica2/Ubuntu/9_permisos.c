@@ -19,7 +19,7 @@
 
 char* leerNombreArchivo()
 {
-	char* path = (char*)malloc(2000*sizeof(char));
+	char* path = (char*)calloc(2000,sizeof(char));
 	printf("Ruta o nombre del archivo: ");
 	scanf("%s", path);
 	return path;
