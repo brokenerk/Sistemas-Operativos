@@ -6,10 +6,12 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <time.h>
 #include <stdlib.h>
 
 int main ()
 {
+  system("cls");
   DIR *dirh;
   struct dirent *dirp;
   struct stat sb;

@@ -15,7 +15,7 @@
 // Función que lee el nombre de un directorio.
 char* leerDirectorio()
 {
-	char* directorio = (char*)malloc(2000*sizeof(char));
+	char* directorio = (char*)calloc(2000,sizeof(char));
 	printf("Ingrese el nuevo directorio: ");
 	scanf("%s", directorio);
 	return directorio;

@@ -30,7 +30,7 @@ void mostrarArchivo(char *path)
 {
   HANDLE file;
   DWORD BytesEscritos = 0;
-  char *contenido = (char*)malloc(100000*sizeof(char));
+  char *contenido = (char*)calloc(100000,sizeof(char));
   file = CreateFile(
          path,
          GENERIC_WRITE | GENERIC_READ,
@@ -65,9 +65,9 @@ void mostrarArchivo(char *path)
 void elegirArchivo(char *path)
 {
   // Reservamos memoria para el nombre del archivo
-  char *name = (char *)malloc(15*sizeof(char));
+  char *name = (char *)calloc(15,sizeof(char));
   // Reservamos memoria para la ruta final
-  char *rutaFinal = (char *)malloc(115*sizeof(char));
+  char *rutaFinal = (char *)calloc(115,sizeof(char));
   fflush(stdin); // Limpia la entrada
   printf("Nombre del archivo:\n");
   scanf("%s", name);
@@ -85,10 +85,10 @@ void elegirArchivo(char *path)
 */
 void copiarArchivo(char *path, char *pathDestino)
 {
-  char *ruta = (char *)malloc(300*sizeof(char));
-  char *fname = (char *)malloc(30*sizeof(char));
-  char *fnew = (char *)malloc(30*sizeof(char));
-  char *contenido = (char *)malloc(100000*sizeof(char));
+  char *ruta = (char *)calloc(300,sizeof(char));
+  char *fname = (char *)calloc(30,sizeof(char));
+  char *fnew = (char *)calloc(30,sizeof(char));
+  char *contenido = (char *)calloc(100000,sizeof(char));
   DWORD BytesEscritos = 0, BytesLeidos = 0;
   HANDLE fileDestino, fileOrigen;
   fflush(stdin);
@@ -137,6 +137,7 @@ void copiarArchivo(char *path, char *pathDestino)
       exit(EXIT_FAILURE);
     }
 
+
     if(WriteFile(fileDestino, contenido, strlen(contenido), &BytesEscritos, NULL))
     {
       printf("\n************ ARCHIVO COPIADO CON EXITO\n");
@@ -161,7 +162,7 @@ void copiarArchivo(char *path, char *pathDestino)
 */
 void recibirRuta(char *path)
 {
-  char *pathDestino = (char *)malloc(100*sizeof(char));
+  char *pathDestino = (char *)calloc(100,sizeof(char));
   int opcCopiar = 1;
   fflush(stdin);
   printf("Ingresa el destino del archivo:\n");
@@ -183,6 +184,7 @@ void recibirRuta(char *path)
 
 int main ()
 {
+  system("cls");
   DIR *dirh;
   struct dirent *dirp;
   struct stat sb;
@@ -199,6 +201,7 @@ int main ()
     perror(ruta);
     exit(EXIT_FAILURE);
   }
+  system("cls");
   // Muestra los archivos del directorio actual
   printf("\n NOMBRE DE LOS ARCHIVOS EN EL DIRECTORIO ACTUAL:\n");    
   for (dirp = readdir (dirh); dirp != NULL; dirp = readdir (dirh))
@@ -215,6 +218,7 @@ int main ()
   // Se muestra menu principal
   while(opcion != 3)
   {
+    
     // Muestra menu principal
     printf("\n\n-----------------------------------------------------------------------");
     printf("\n\t\t\t\tELIGE UNA OPCION");
