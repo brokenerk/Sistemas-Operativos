@@ -7,6 +7,7 @@
                       existir en la ruta de destino.
                    -> Se debe ingresar un archivo que SI exista
                       en el directorio que al inicio se eligio.
+                   -> El archivo se copia con el mismo nombre.
 */
 #include <stdio.h>
 #include <windows.h>
@@ -77,6 +78,11 @@ void elegirArchivo(char *path)
   free(name);
   free(rutaFinal);
 }
+/*
+  Función que copia un archivo, recibe la ruta 
+  donde se encuentra dicho archivo y la ruta donde
+  sera copiado el archivo.
+*/
 void copiarArchivo(char *path, char *pathDestino)
 {
   char *ruta = (char *)malloc(300*sizeof(char));
@@ -149,7 +155,10 @@ void copiarArchivo(char *path, char *pathDestino)
     }
   }
 }
-
+/*
+  Función que permite ingresar el destino del archivo, y seguir
+  copiando n veces el archivo.
+*/
 void recibirRuta(char *path)
 {
   char *pathDestino = (char *)malloc(100*sizeof(char));
