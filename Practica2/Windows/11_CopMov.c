@@ -3,6 +3,10 @@
                  un archivo seleccionado por el usuario y que
                  copia uno o más de los archivos creados a un 
                  directorio previamente establecido.
+    Observaciones: -> Para copiar un archivo, el archivo no debe
+                      existir en la ruta de destino.
+                   -> Se debe ingresar un archivo que SI exista
+                      en el directorio que al inicio se eligio.
 */
 #include <stdio.h>
 #include <windows.h>
@@ -61,6 +65,70 @@ void elegirArchivo(char *path)
   free(name);
   free(rutaFinal);
 }
+void copiarArchivo(char *path, char *pathDestino)
+{
+  char *ruta = (char *)malloc(100*sizeof(char));
+  char *fname = (char *)malloc(15*sizeof(char));
+  char *fnew = (char *)malloc(15*sizeof(char));
+  char *contenido = (char *)malloc(1000*sizeof(char));
+  DWORD BytesEscritos = 0, BytesLeidos = 0;
+  HANDLE fileDestino, fileOrigen;
+  fflush(stdin);
+  printf("Nombre del archivo:\n");
+  scanf("%s", fname);
+  fnew = fname;
+  // Juntamos directorio actual y nombre del archivo
+  strcat(strcat(strcpy(ruta, path), "\\\\"), fname);
+
+  fileOrigen = CreateFile(
+               ruta,                          // Ruta donde esta el archivo
+               GENERIC_WRITE | GENERIC_READ,  // Acceso solicitado: Escribir y leer
+               FILE_SHARE_WRITE,              // Modo de intercambio del archivo
+               NULL,                          // Atributos de seguridad
+               OPEN_EXISTING,                 // Abre el archivo solo si existe
+               FILE_ATTRIBUTE_NORMAL,         // Atributos o banderas de un archivo
+               NULL);                         // Identificador, en este caso nulo
+  ReadFile(fileOrigen, contenido, 1000 , &BytesEscritos, NULL);
+  strcat(strcat(strcpy(ruta, pathDestino), "\\\\"), fnew);
+
+  fileDestino = CreateFile(
+               ruta,                                // Ruta donde esta el archivo
+               GENERIC_WRITE | GENERIC_READ,        // Acceso solicitado: Escribir y leer
+               FILE_SHARE_READ | FILE_SHARE_WRITE,  // Modo de intercambio del archivo
+               NULL,                                // Atributos de seguridad     
+               CREATE_NEW,                          // Abre el archivo solo si existe
+               FILE_ATTRIBUTE_NORMAL,               // Atributos o banderas de un archivo
+               NULL);                               // Identificador, en este caso nulo
+
+  if(WriteFile(fileDestino, contenido, strlen(contenido), &BytesEscritos, NULL))
+      printf("\n************ ARCHIVO COPIADO CON EXITO\n");
+    
+  free(contenido); free(fname); free(ruta);
+  CloseHandle(fileDestino);
+  CloseHandle(fileOrigen);
+}
+
+void recibirRuta(char *path)
+{
+  char *pathDestino = (char *)malloc(100*sizeof(char));
+  int opcCopiar = 1;
+  fflush(stdin);
+  printf("Ingresa el destino del archivo:\n");
+  scanf("%s", pathDestino);
+  while(opcCopiar == 1)
+  {
+    copiarArchivo(path, pathDestino);
+    fflush(stdin);
+    printf("Copiar otro archivo\n");
+    printf("1. Si\n");
+    printf("2. No\n");
+    scanf("%d", &opcCopiar);
+  }
+}
+
+/********************************************************/
+/*                       MAIN                          */
+/******************************************************/
 
 int main ()
 {
@@ -109,12 +177,12 @@ int main ()
     opcion = aopc;
     if(opcion == 1)
     {
-      printf("ENTRA A OPCION 1\n");
+      //printf("ENTRA A OPCION 1\n");
       elegirArchivo(ruta);      
     }
     if(opcion == 2)
     {
-      printf("\n Selecciona el directorio destino\n");
+      recibirRuta(ruta);
     }
   }
   closedir(dirh);
