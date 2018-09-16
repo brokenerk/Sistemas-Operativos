@@ -4,9 +4,7 @@
 */
 #include <stdio.h>
 #include <dirent.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -26,6 +24,12 @@ int main ()
   }
 
   printf("\n NOMBRE\t\t\t TAMANO\t\t\t FECHA Y HORA \t\t\t\t\n");
+
+  if(readdir(dirh) == NULL)
+  {
+    perror(ruta);
+    exit(EXIT_FAILURE);
+  }
     
   for (dirp = readdir (dirh); dirp != NULL; dirp = readdir (dirh))
   {
@@ -41,6 +45,10 @@ int main ()
       printf ("%s", ctime (&sb.st_atime)); // Imprime la fecha y hora
     }
   }
-  closedir(dirh);
+  if(closedir(dirh) == -1)
+  {
+    perror(ruta);
+    exit(EXIT_FAILURE); 
+  }
   return 0;
 }

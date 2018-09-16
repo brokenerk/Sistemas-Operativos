@@ -10,11 +10,9 @@
 */
 #include <stdio.h>
 #include <windows.h>
-#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 
 //void elegirArchivo(char *path);
@@ -40,10 +38,24 @@ void mostrarArchivo(char *path)
          OPEN_EXISTING,
          FILE_ATTRIBUTE_NORMAL,
          NULL);
-  if(ReadFile(file, contenido, 100000, &BytesEscritos, NULL))
+
+  if(file == INVALID_HANDLE_VALUE)
+  {
+    perror(path);
+    exit(EXIT_FAILURE);
+  }
+  else
+  {
+    if(ReadFile(file, contenido, 100000, &BytesEscritos, NULL))
       printf("\n Contenido del archivo:\n %s", contenido);
     free(contenido);
-    CloseHandle(file);
+
+    if(CloseHandle(file) == 0)
+    {
+      perror(path);
+      exit(EXIT_FAILURE);
+    }
+  }
 }
 /*
   Función que elige un archivo, recibe la ruta 
@@ -67,10 +79,10 @@ void elegirArchivo(char *path)
 }
 void copiarArchivo(char *path, char *pathDestino)
 {
-  char *ruta = (char *)malloc(100*sizeof(char));
-  char *fname = (char *)malloc(15*sizeof(char));
-  char *fnew = (char *)malloc(15*sizeof(char));
-  char *contenido = (char *)malloc(1000*sizeof(char));
+  char *ruta = (char *)malloc(300*sizeof(char));
+  char *fname = (char *)malloc(30*sizeof(char));
+  char *fnew = (char *)malloc(30*sizeof(char));
+  char *contenido = (char *)malloc(100000*sizeof(char));
   DWORD BytesEscritos = 0, BytesLeidos = 0;
   HANDLE fileDestino, fileOrigen;
   fflush(stdin);
@@ -88,10 +100,23 @@ void copiarArchivo(char *path, char *pathDestino)
                OPEN_EXISTING,                 // Abre el archivo solo si existe
                FILE_ATTRIBUTE_NORMAL,         // Atributos o banderas de un archivo
                NULL);                         // Identificador, en este caso nulo
-  ReadFile(fileOrigen, contenido, 1000 , &BytesEscritos, NULL);
-  strcat(strcat(strcpy(ruta, pathDestino), "\\\\"), fnew);
 
-  fileDestino = CreateFile(
+  if(fileOrigen == INVALID_HANDLE_VALUE)
+  {
+    perror(path);
+    exit(EXIT_FAILURE);
+  }
+  else
+  {
+    if(!ReadFile(fileOrigen, contenido, 100000 , &BytesEscritos, NULL))
+    {
+      perror(path);
+      exit(EXIT_FAILURE);
+    }
+
+    strcat(strcat(strcpy(ruta, pathDestino), "\\\\"), fnew);
+
+    fileDestino = CreateFile(
                ruta,                                // Ruta donde esta el archivo
                GENERIC_WRITE | GENERIC_READ,        // Acceso solicitado: Escribir y leer
                FILE_SHARE_READ | FILE_SHARE_WRITE,  // Modo de intercambio del archivo
@@ -100,12 +125,29 @@ void copiarArchivo(char *path, char *pathDestino)
                FILE_ATTRIBUTE_NORMAL,               // Atributos o banderas de un archivo
                NULL);                               // Identificador, en este caso nulo
 
-  if(WriteFile(fileDestino, contenido, strlen(contenido), &BytesEscritos, NULL))
+    if(fileDestino == INVALID_HANDLE_VALUE)
+    {
+      perror(path);
+      exit(EXIT_FAILURE);
+    }
+
+    if(WriteFile(fileDestino, contenido, strlen(contenido), &BytesEscritos, NULL))
+    {
       printf("\n************ ARCHIVO COPIADO CON EXITO\n");
-    
-  free(contenido); free(fname); free(ruta);
-  CloseHandle(fileDestino);
-  CloseHandle(fileOrigen);
+    }
+    else
+    {
+      perror(ruta);
+      exit(EXIT_FAILURE);
+    }
+    free(contenido); free(fname); free(ruta);
+
+    if(CloseHandle(fileDestino) == 0 || CloseHandle(fileOrigen) == 0)
+    {
+      perror(ruta);
+      exit(EXIT_FAILURE);
+    }
+  }
 }
 
 void recibirRuta(char *path)
@@ -185,6 +227,10 @@ int main ()
       recibirRuta(ruta);
     }
   }
-  closedir(dirh);
+  if(closedir(dirh) == -1)
+  {
+    perror(ruta);
+    exit(EXIT_FAILURE); 
+  }
   return 0;
 }
