@@ -24,7 +24,8 @@ char* leerDirectorio()
 void escribirArchivo(HANDLE harchivo, char content[10][1000], int k, int r, char* ruta)
 {
     DWORD bytesEscritos = 0;
-	for(int j=0 ; j<r*5 ; j++) // Escribimos 5 veces el texto en el archivo
+	int j;
+    for(j=0 ; j<r*5 ; j++) // Escribimos 5 veces el texto en el archivo
 	{
         /*Funcion WrifeFile recibe los parametros a continuacion y devuelve un true si no existieron errores*/
 		BOOL escribir = WriteFile( 
@@ -87,8 +88,8 @@ int main(int argc, const char *argv[])
     	char* dir=(char*)calloc(2000,sizeof(char));
     	int random = (rand()%10)+1; // Creamos numeros aleatorios de 1 a 10 
     	char numero[10];
-
-    	for(int i=0; i<random; i++)
+        int i;
+    	for(i=0; i<random; i++)
     	{
             /*Copiamos a cada salto la cadena path a la cadena dir para limpiarla
             Damos formato de cadena y concatenamos el numero de archivo generado por el ciclo y agregamos la extension TXT*/
