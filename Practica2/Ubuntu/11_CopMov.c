@@ -19,12 +19,13 @@
 #include <dirent.h>
 #include <time.h>
 
-void mostrarArchivo(char *path)
+void mostrarArchivo(char *dir)
 {
-  char name[300];
+  char name[300], path[100];
   printf("Nombre del archivo:\n");
   scanf("%s", name);
   // Concatenamos ruta actual y nombre del archivo
+  strcpy(path, dir);
   strcat(path,"/");
   strcat(path, name);
   
@@ -53,14 +54,15 @@ void mostrarArchivo(char *path)
     perror(path);
     exit(EXIT_FAILURE);
   }
+  free(contenido);
 }
 
 /*
   Copia un archivo en otro directorio, dado por el usuario
 */
-void copiarArchivo(char *path)
+void copiarArchivo(char *dir)
 {
-  char pathDestino[1000], name[300];
+  char pathDestino[1000], name[300], path[100];
   int archivoOrigen, archivoDestino;
   int opc = 1;
   while(opc == 1)
@@ -71,6 +73,7 @@ void copiarArchivo(char *path)
     printf("Nombre del archivo:\n");
     scanf("%s", name);
     // Concatenamos ruta actual y nombre del archivo
+    strcpy(path, dir);
     strcat(path,"/");
     strcat(path, name);
     // Concatenamos ruta destino y nombre del archivo
@@ -105,18 +108,21 @@ void copiarArchivo(char *path)
         }
 
       }
+
       if(close(archivoOrigen) == -1 || close(archivoDestino) == -1)
       {
         perror(path);
         exit(EXIT_FAILURE);
       }  
     }
+    
 
     printf("Elige un archivo existente\n");
     printf("\n Copiar otro archivo\n");
     printf("1. Si\n");
     printf("2. No\n");
     scanf("%d", &opc);
+    free(contenido); 
   }
 }
 /********************************************************/
