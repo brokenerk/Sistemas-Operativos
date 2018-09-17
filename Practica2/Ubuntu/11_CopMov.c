@@ -36,7 +36,7 @@ void mostrarArchivo(char *path)
   printf("Contenido:\n");
   while(read(archivo, &car, sizeof (car) != 0))
   {
-    printf("%c\n", car);
+    printf("%c", car);
   }
   close(archivo);
 }
@@ -71,8 +71,9 @@ void copiarArchivo(char *path)
       while(read(archivoOrigen, &car, sizeof(car)!= 0))
       {
         write(archivoDestino, &car, sizeof(car));
-        close(archivoOrigen); close(archivoDestino);
       }
+      close(archivoOrigen); close(archivoDestino);
+      
     }
     else
       printf("Elige un archivo existente\n");
