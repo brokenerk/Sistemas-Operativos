@@ -51,7 +51,6 @@ int main ()
         printf ("%ld bytes\t\t", (long) sb.st_size); // Imprime el tam del archivo 
         printf ("%s", ctime (&sb.st_atime)); // Imprime la fecha y hora
       }
-      
     }
   }
   if(closedir(dirh) == -1)

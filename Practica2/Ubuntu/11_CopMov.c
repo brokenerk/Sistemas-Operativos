@@ -19,9 +19,6 @@
 #include <dirent.h>
 #include <time.h>
 
-//void elegirArchivo(char *path);
-//void mostrarArchivo(char *path);
-
 void mostrarArchivo(char *path)
 {
   char name[300];
@@ -121,8 +118,6 @@ void copiarArchivo(char *path)
     printf("2. No\n");
     scanf("%d", &opc);
   }
-
-  
 }
 /********************************************************/
 /*                       MAIN                          */

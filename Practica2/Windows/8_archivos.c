@@ -10,8 +10,6 @@
 #include <conio.h>
 #include <string.h>
 
-
-
 // Función que lee el nombre de un directorio.
 char* leerDirectorio()
 {
@@ -46,7 +44,6 @@ void escribirArchivo(HANDLE harchivo, char content[10][1000], int k, int r, char
     		perror(ruta);
     		exit(EXIT_FAILURE);
     	}
-
     }
     //Llamada al sistema CloseHandle recibe un descriptor de archivo y retorna un valor cero si han habido errores
     if(CloseHandle(harchivo) == 0)
@@ -82,7 +79,6 @@ int main(int argc, const char *argv[])
     else
     {
     	printf("\nEste es el directorio creado: %s\n", path);
-    	
     	strcat(path, "/archivo"); // Concatenamos a la ruta con strcat()
     	char* dir=(char*)calloc(2000,sizeof(char));
     	int random = (rand()%10)+1; // Creamos numeros aleatorios de 1 a 10 
@@ -117,7 +113,6 @@ int main(int argc, const char *argv[])
     			escribirArchivo(h, contenido, i, random, dir);
     		}
     	}
-	
     }
     return 0;
 }

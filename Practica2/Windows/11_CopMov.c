@@ -15,10 +15,6 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/stat.h>
-
-//void elegirArchivo(char *path);
-//void mostrarArchivo(char *path);
-
 /********************************************************/
 /*                    FUNCIONES                        */
 /******************************************************/
@@ -136,7 +132,6 @@ void copiarArchivo(char *path, char *pathDestino)
       perror(path);
       exit(EXIT_FAILURE);
     }
-
 
     if(WriteFile(fileDestino, contenido, strlen(contenido), &BytesEscritos, NULL))
     {
