@@ -34,6 +34,7 @@ void mostrarArchivo(char *path)
   
   archivo = open(path, O_RDONLY);
   printf("Contenido:\n");
+
   while(read(archivo, &car, sizeof (car) != 0))
   {
     printf("%c", car);
@@ -63,14 +64,14 @@ void copiarArchivo(char *path)
     strcat(pathDestino,"/");
     strcat(pathDestino, name);
 
-    archivoOrigen = open(path, O_RDONLY);
-    archivoDestino = open(pathDestino, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    archivoOrigen = open (path, O_RDONLY);
+    archivoDestino = open (pathDestino, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
     if(archivoOrigen != -1)
     {
-      while(read(archivoOrigen, &car, sizeof(car)!= 0))
+      while(read(archivoOrigen, &car, sizeof (car)!= 0))
       {
-        write(archivoDestino, &car, sizeof(car));
+        write(archivoDestino, &car, sizeof (car));
       }
       close(archivoOrigen); close(archivoDestino);
       
