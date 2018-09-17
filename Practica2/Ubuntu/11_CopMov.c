@@ -24,22 +24,38 @@
 
 void mostrarArchivo(char *path)
 {
-  char car, name[15];
-  int archivo;
+  char name[300];
   printf("Nombre del archivo:\n");
   scanf("%s", name);
   // Concatenamos ruta actual y nombre del archivo
   strcat(path,"/");
   strcat(path, name);
   
-  archivo = open(path, O_RDONLY);
+  int archivo = open(path, O_RDONLY);
+  if(archivo == -1)
+  {
+    perror(path);
+    exit(EXIT_FAILURE);
+  }
+  struct stat sb;
+  if(stat (path, &sb) == -1)
+  {
+    perror(path);
+    exit(EXIT_FAILURE);
+  }
+  long long longitud = (long long) sb.st_size;
+  char *contenido = (char*)calloc(longitud,sizeof(char));
   printf("Contenido:\n");
 
-  while(read(archivo, &car, sizeof (car) != 0))
+  if(read(archivo, contenido, longitud) == longitud)
   {
-    printf("%c", car);
+    printf("%s\n", contenido);
   }
-  close(archivo);
+  if(close(archivo) == -1)
+  {
+    perror(path);
+    exit(EXIT_FAILURE);
+  }
 }
 
 /*
@@ -47,7 +63,7 @@ void mostrarArchivo(char *path)
 */
 void copiarArchivo(char *path)
 {
-  char car, pathDestino[100], name[15];
+  char pathDestino[1000], name[300];
   int archivoOrigen, archivoDestino;
   int opc = 1;
   while(opc == 1)
@@ -67,17 +83,39 @@ void copiarArchivo(char *path)
     archivoOrigen = open (path, O_RDONLY);
     archivoDestino = open (pathDestino, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
+    if(archivoOrigen == -1)
+    {
+      perror(path);
+      exit(EXIT_FAILURE);
+    }
+
+    struct stat sb;
+    if(stat (path, &sb) == -1)
+    {
+      perror(path);
+      exit(EXIT_FAILURE);
+    }
+    long long longitud = (long long) sb.st_size;
+    char *contenido = (char*)calloc(longitud,sizeof(char));
+
     if(archivoOrigen != -1)
     {
-      while(read(archivoOrigen, &car, sizeof (car)!= 0))
+      while(read(archivoOrigen, contenido, longitud) == longitud)
       {
-        write(archivoDestino, &car, sizeof (car));
+        if(write(archivoDestino, contenido, longitud) == longitud)
+        {
+          printf("\n************ ARCHIVO COPIADO CON EXITO\n");
+        }
+
       }
-      close(archivoOrigen); close(archivoDestino);
-      
+      if(close(archivoOrigen) == -1 || close(archivoDestino) == -1)
+      {
+        perror(path);
+        exit(EXIT_FAILURE);
+      }  
     }
-    else
-      printf("Elige un archivo existente\n");
+
+    printf("Elige un archivo existente\n");
     printf("\n Copiar otro archivo\n");
     printf("1. Si\n");
     printf("2. No\n");

@@ -43,9 +43,15 @@ int main ()
     if(strlen(dirp->d_name)>3)
     {
       printf ("\n%s\t\t", dirp->d_name);
-      stat (aux, &sb);
-      printf ("%ld bytes\t\t", (long) sb.st_size); // Imprime el tam del archivo 
-      printf ("%s", ctime (&sb.st_atime)); // Imprime la fecha y hora
+      if(stat (aux, &sb) == -1){
+        perror(ruta);
+        exit(EXIT_FAILURE);
+      }
+      else{
+        printf ("%ld bytes\t\t", (long) sb.st_size); // Imprime el tam del archivo 
+        printf ("%s", ctime (&sb.st_atime)); // Imprime la fecha y hora
+      }
+      
     }
   }
   if(closedir(dirh) == -1)
