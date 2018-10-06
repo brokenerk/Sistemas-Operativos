@@ -7,7 +7,7 @@ section .bss                                ;Segmento de datos
     valor resb 1                            ;Espacio en memoria para la variable valor
 
 section .text                               ;Segmento de codigo
-    global _start                           ;Punto de entrada al programa (usando en el enlazados Id)
+global _start                               ;Punto de entrada al programa (usando en el enlazador Id)
 
 _start:                                     ;Inicio del programa
     mov eax,0                               ;Iniciamos contador en cero
