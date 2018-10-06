@@ -1,5 +1,5 @@
 // 04 de Octubre 2018
-// Para generar muchos procesos seguidos
+// Para generar muchos procesos seguidos - VERTICALES
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
