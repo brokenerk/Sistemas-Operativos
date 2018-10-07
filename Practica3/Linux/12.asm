@@ -23,8 +23,10 @@ section .data 								;Segmento de datos
 	len11 equ $ - msg11
 	msg12 db 0XA,0XD,"La longitud de la cadena:",0XA,0XD
 	len12 equ $ - msg12
-	msg13 db 0XA,0XD,"La cadena invertido:",0XA,0XD
+	msg13 db 0XA,0XD,"La cadena invertida:",0XA,0XD
 	len13 equ $ - msg13
+	salto db 0xA,0xD                        ;Salto de linea a imprimir
+    len equ $ - salto                       ;Longitud de salto
 
 section .bss				;Segmento de datos
 	cadena1 resb 90			;Espacio de memoria para la cadena almacenar
@@ -40,29 +42,33 @@ section .bss				;Segmento de datos
 	cadenafinal resb 900
 	cadenainv resb 900
 	contador resb 1
-	auxiliar resb 2
+	auxiliar resb 3
 
 section .text
 global _start
 
-_start:
+_start:				;Vamos llamando a las funciones que se ejecutaran
 	call leer_datos
 	call concatenar
 	call longitud
-	call invertir
 	call imprimir
+	mov ecx,899 	;Nos sirve como contador para invertir la cadena
+	mov edx,0 		;Este seria el limite del ciclo
+	mov edi,cadenainv ;Enviamos la cadenainv a edi
+	call invertir
+
 	mov eax,1		;Numero de llamada al sistema "sys_exit"
 	int 0x80		;Interrupcion de llamadas al sistema del kernel de Linux
 
 concatenar:
 	;ya use ecx, edx,
-	mov ecx, 0			
-	mov edx, 90
-	mov edi,cadenafinal ;Colocamos la cadena concatenada a esi
+	mov ecx, 0			;Contador
+	mov edx, 90 		;Longitud de la cadena
+	mov edi,cadenafinal ;Colocamos la cadena concatenada a edi
 	mov esi,cadena1 	;Colocamos la cadena1 a esi
 	
 repetir: 	
-;Vamos ir colocando cadena por cadena en esi, recorriendo sus caracteres para que se concatenen consecutivamente			
+;Vamos ir colocando cadena por cadena en esi, recorriendo sus caracteres para que se concatenen consecutivamente		
 	mov eax,[esi] 		;eax = esi
 	mov [edi],eax		;edi = eax
 	inc edi				;Incrementa edi
@@ -324,18 +330,18 @@ leer_datos:
 
 longitud:
 	mov ecx,900 		;Longitud maxima de la cadena
-	mov eax,0			
+	mov eax,0			;Contador para recorrer la cadena	
 	mov esi,cadenafinal	;Colocamos cadena concatenada en esi
 
-cic:
-	mov ebx,[esi]
-	CMP ebx,0XA
-	JE fin_cic
-	INC eax
-	INC esi
-	mov [contador],eax
-	CMP eax,ecx
-	JLE cic
+cic: 					;Ciclo para recorrer el arreglo
+	mov ebx,[esi] 		; ebx = esi
+	CMP ebx,0XA 		;Comparamos si ebx alcanco el final de la cadena
+	JE fin_cic 			;Si sí son iguales, terminamos
+	INC eax 			;Incrementamos eax 
+	INC esi 			;Incrementamos esi, para guardar el caracter
+	mov [contador],eax 	;contador=eax
+	CMP eax,ecx 		;Comparamos eax con ecx
+	JLE cic 			;Si son distintos, repetimos
 
 fin_cic:
 	mov eax,[contador]
@@ -375,14 +381,9 @@ imprimir:
 	mov ecx,msg13
 	mov edx,len13
 	int 0x80
-	mov eax,4 ;Imprimir en pantalla cadena invertida
-	mov ebx,1
-	mov ecx,cadenainv
-	mov edx,900
-	int 0x80
 	ret
 
-convertir:
+convertir: 				;Convertir a ASCII para la salida estandar
 	mov eax,[contador]
 	mov esi,auxiliar
 	mov bl,10
@@ -394,23 +395,24 @@ convertir:
 	mov [esi],ah
 	ret
 
-invertir:
-	mov esi,cadenafinal
-	mov edi,cadenainv
-	mov ecx,20
-	mov eax,0
-
-c:
-	mov ebx,[esi]
-	mov [edi],ebx
-	INC eax
-	DEC esi
-	INC edi
-	CMP eax,ecx
-	JE f
-	JLE c
-
-fin_c:
-
-f:
+invertir: 					;ecx inicia en el ultimo caracter
+	mov esi, cadenafinal 	;Enviamos cadenafinal a esi
+	add esi, ecx 			;Sumamos aritmeticamente ecx a esi
+	mov eax,[esi] 			;eax = esi
+	mov [edi],eax 			;edi = eax (Copiamos caracter por caracter)
+	INC edi 				;Recorremos la posicion en edi (cadenainv)
+	DEC ecx 				;Restamos nuestro contador
+	CMP edx,ecx			;Comparamos ecx y edx
+	JLE invertir 		;Si aun no hemos llegado al primer caracter, repetimos
+	
+	mov eax,4 			;Imprimir en pantalla cadena invertida
+	mov ebx,1
+	mov ecx,cadenainv
+	mov edx,900
+	int 0x80
+	mov eax,4           ;Numero de llamada al sistema "sys_write"
+    mov ebx,1           ;Salida estandar
+    mov ecx,salto       ;Salto a escribir
+    mov edx,len         ;Longitud del salto
+    int 0x80            ;Interrupcion de llamadas al sistema del kernel de Linux
 	ret

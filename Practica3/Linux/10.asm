@@ -66,7 +66,7 @@ ciclo:					;Ciclo para recorrer las cadenas
 	mov [edi],eax
 	INC edi
 
-	mov esi,cadena3		;Recorrer caracteres cadena2
+	mov esi,cadena3		;Recorrer caracteres cadena3
 	add esi,edx
 	mov eax,[esi]
 	mov [edi],eax
