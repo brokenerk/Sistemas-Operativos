@@ -1,0 +1,37 @@
+PRÁCTICA 4 - ADMINISTRADOR DE PROCESOS EN LINUX Y WINDOWS (1)
+
+	* Revisión de la creación de procesos en Linux y Windows
+	* Revisión de las llamadas al sistema para la creación de procesos en Linux y Windows
+	* Desarrollo de aplicaciones concurrentes mediante la creación de procesos en ambos sistemas operativos
+
+--> LLAMADAS AL SISTEMA PARA PROCESOS EN LINUX:
+	
+	* fork() Llamada para la creación de un proceso por copia exacta de código.
+	* execv() Llamada para la creación de un proceso por sustitución de código.
+	* wait() Llamada para esperar la terminación de un proceso hijo por un proceso padre.
+	* getpid() Llamada para obtener el identificador del proceso quien invoca a la llamada.
+	* getppid() LLamada para obtener el identificador del proceso padre del proceso quien invoca a la llamada.
+
+--> LLAMADAS AL SISTEMA PARA PROCESOS EN WINDOWS:
+
+	* CreateProcess() Llamda para la creación de un proceso por sustitución de código.
+	* WaitForSingleObject() Llamada para esperar la terminación de un proceso.
+
+--> COMENTARIOS DEL PROFESOR
+
+La idea de sustituir código es que se crea un nuevo proceso, y por copia exacta se sobre escribe.
+
+execv() viene de la familia que siempre inicia con exe, dependiendo del comportamiento que deseamos
+se cambia la ultima letra. Usualmente se ocupa la letra V
+
+wait() hace que el padre espere a que un hijo termine. 
+
+Punto 1 - Comandos ps muestra los procesos actuales
+
+--> IMPRIMIR IDENTIFICADORES DEL PROCESO PADRE E HIJOS
+	
+Punto 4 - Generar tabla como lo hace el comando PID, PPID.
+Punto 6 - Valor nulo es importante porque así se sabe cuantos argumentos se pasan. 
+
+100% concurrente: Sin tiempo de espera en la ejecucion entre los tres programas
+
