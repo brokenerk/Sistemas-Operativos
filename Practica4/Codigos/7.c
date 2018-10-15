@@ -9,8 +9,8 @@
 int main(){
 	pid_t pid;
 	char *argv[3];
-	argv[0] = "/home/alumno/Escritorio/P4-SO/expresion";
-	argv[1] = "/home/alumno/Escritorio/P4-SO/permisos";
+	argv[0] = "/home/enrike/Escritorio/P4-SO/expresion";
+	argv[1] = "/home/enrike/Escritorio/P4-SO/permisos";
 	argv[2] = NULL;
 
 	if(pid = fork() == 0)
