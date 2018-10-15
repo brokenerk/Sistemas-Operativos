@@ -4,11 +4,11 @@
 int main(int argc, char const *argv[])
 {
 	int i, j, n = 3;
-	int matriz1[n][n], matriz2[n][n], ;
+	int matriz1[n][n], matriz2[n][n];
 	int suma[n][n], resta[n][n], multiplica[n][n], trans[n][n], inversa[n][n];
 	
-	matriz1 = {{2, 0, 1}, {3, 0, 0}, {5, 1, 1}};
-	matriz2 = {{1, 0, 1}, {1, 2, 1}, {1, 1, 0}};	
+	matriz1[n][n] = {{2, 0, 1}, {3, 0, 0}, {5, 1, 1}};
+	matriz2[n][n] = {{1, 0, 1}, {1, 2, 1}, {1, 1, 0}};	
 
 	// Imprimir matriz
 	for(i = 0; i < n; i++)
