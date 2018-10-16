@@ -8,6 +8,7 @@ void sumar(int m1[][n], int m2[][n], int resultado[][n]);
 void restar(int m1[][n], int m2[][n], int resultado[][n]);
 void multiplicar(int m1[][n], int m2[][n], int resultado[][n]);
 void transpuesta(int m[][n], int resultado[][n]);
+int determinante(int m[][n], int len);
 
 
 int main(int argc, char const *argv[])
@@ -41,6 +42,8 @@ int main(int argc, char const *argv[])
 	printf("TRANSPUESTA\n");
 	Imprimir(trans);
 
+	int deter = determinante(matriz1, n);
+	printf("DETERMINANTE = %d\n", deter);
 	
 	return 0;
 }
@@ -117,4 +120,30 @@ void transpuesta(int m[][n], int resultado[][n])
 			resultado[i][j] = m[j][i];
 		}
 	}
+}
+
+int determinante(int m[][n], int len)
+{
+	int i, j, producto1, producto2, col, fil, sumapos, sumaneg, suma;
+	sumapos = 0;
+	sumaneg = 0;
+	suma = 0;
+	for(i = 0; i < len; i++)
+	{
+		producto1 = 1;
+		producto2 = 1;
+		for(j = 0; j < len; j++)
+		{
+			col = j + i;
+			if( col >= len )
+				col = col - len;
+
+			producto1 = producto1 * m[j][col];
+			producto2 = producto2 * m[len-(j+1)][col];
+		}
+		sumapos = sumapos + producto1;
+		sumaneg = sumaneg + producto2;
+	}
+	suma = sumapos - sumaneg;
+	return suma;
 }
