@@ -9,13 +9,13 @@ void restar(int m1[][n], int m2[][n], int resultado[][n]);
 void multiplicar(int m1[][n], int m2[][n], int resultado[][n]);
 void transpuesta(int m[][n], int resultado[][n]);
 int determinante(int m[][n]);
-void inversa(int matriz1[][n]);
+void inversa(int m[][n]);
 
 
 int main(int argc, char const *argv[])
 {
 	int i, j, k, aux;
-	int suma[n][n], resta[n][n], multiplica[n][n], trans[n][n], inversa[n][n];
+	int suma[n][n], resta[n][n], multiplica[n][n], trans[n][n], inv[n][n];
 	
 	int matriz1[n][n] = {{2, 0, 1}, {3, 0, 0}, {5, 1, 1}};
 	int matriz2[n][n] = {{1, 0, 1}, {1, 2, 1}, {1, 1, 0}};	
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
 	int deter = determinante(matriz1);
 	printf("DETERMINANTE = %d\n", deter);
 
-	// inversa(matriz1);
+	inversa(matriz1);
 
 	return 0;
 }
@@ -154,10 +154,10 @@ int determinante(int m[][n])
 void inversa(int m[][n])
 {
 	printf("ALOOOO\n");
-	/*int i, j, k, z, determ;
+	int i, j, k, z, determ;
 	int trans[n][n];
 
-	determ = determinante(matriz1);
+	determ = determinante(m);
 
 	if(determ == 0)
 		printf("La matriz inversa no existe\n");
@@ -170,7 +170,7 @@ void inversa(int m[][n])
 	   	 {
 	   		 for(j=0;j<10;j++)
 	   		 {
-	   			 a[i][j]=(float)matriz1[i][j];
+	   			 a[i][j]=(float)m[i][j];
 	   			 if(j==i)
 	   				 identidad[i][j]=1;
 	   			 else
@@ -300,10 +300,5 @@ void inversa(int m[][n])
 	   		 }
 	   		 printf("\n");
 	   	 }
-	   	 
-
-
 	}
-*/
-
 }
