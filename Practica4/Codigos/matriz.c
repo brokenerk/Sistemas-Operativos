@@ -17,10 +17,10 @@ int main(int argc, char const *argv[])
 	int i, j, k, aux;
 	int suma[n][n], resta[n][n], multiplica[n][n], trans[n][n], inversa[n][n];
 	
-	int m[n][n] = {{2, 0, 1}, {3, 0, 0}, {5, 1, 1}};
+	int matriz1[n][n] = {{2, 0, 1}, {3, 0, 0}, {5, 1, 1}};
 	int matriz2[n][n] = {{1, 0, 1}, {1, 2, 1}, {1, 1, 0}};	
 
-	/*printf("MATRIZ 1\n");
+	printf("MATRIZ 1\n");
 	Imprimir(matriz1);
 
 	printf("MATRIZ 2\n");
@@ -45,9 +45,8 @@ int main(int argc, char const *argv[])
 
 	int deter = determinante(matriz1);
 	printf("DETERMINANTE = %d\n", deter);
-	*/
 
-	inversa(m);
+	// inversa(matriz1);
 
 	return 0;
 }
@@ -152,9 +151,10 @@ int determinante(int m[][n])
 	return suma;
 }
 
-void inversa(int matriz1[][n])
+void inversa(int m[][n])
 {
-	int i, j, k, z, determ;
+	printf("ALOOOO\n");
+	/*int i, j, k, z, determ;
 	int trans[n][n];
 
 	determ = determinante(matriz1);
@@ -304,6 +304,6 @@ void inversa(int matriz1[][n])
 
 
 	}
-
+*/
 
 }
