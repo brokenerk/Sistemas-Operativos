@@ -17,10 +17,10 @@ int main(int argc, char const *argv[])
 {
 	int i, j, k, l, m, n, o, p;
 	int det;
+	double **matriz1, **matriz2, **suma, **resta, **mul, **tran, **inv;
 	time_t t;
 	srand((unsigned) time(&t));
 	srand((unsigned)time(&t));
-	double **matriz1, **matriz2, **suma, **resta, **mul, **tran, **inv;
 	n = 3;
 
 	// Inicializa las matrices.
