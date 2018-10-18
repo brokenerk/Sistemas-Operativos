@@ -1,5 +1,3 @@
-// 04 de Octubre 2018
-// Para generar muchos procesos HIJO - HORIZONTALES
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
