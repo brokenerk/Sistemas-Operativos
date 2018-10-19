@@ -12,7 +12,6 @@ void restar(double **m1, double **m2, double **resultado, int n);
 void multiplicar(double **m1, double **m2, double **resultado, int n);
 void transpuesta(double **m, double **resultado, int n);
 void inversa(double **matriz, double **resultado, int n);
-void iniciar(double **m, int n);
 int main(int argc, char const *argv[])
 {
 	int i, j, k, l, m, n, o, p;
@@ -24,10 +23,33 @@ int main(int argc, char const *argv[])
 	n = 3;
 
 	// Inicializa las matrices.
-	iniciar(matriz1, n); iniciar(matriz2, n);
-	iniciar(suma, n); iniciar(resta, n);
-	iniciar(mul, n); iniciar(tran, n);
-	iniciar(inv, n);
+	matriz1 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		matriz1[i] = (double*)calloc(n,sizeof(double));
+
+	matriz2 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		matriz2[i] = (double*)calloc(n,sizeof(double));
+	
+	suma = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		suma[i] = (double*)calloc(n,sizeof(double));
+
+	resta = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		resta[i] = (double*)calloc(n,sizeof(double));
+
+	mul = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		mul[i] = (double*)calloc(n,sizeof(double));
+
+	tran = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		tran[i] = (double*)calloc(n,sizeof(double));
+	
+	inv = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		inv[i] = (double*)calloc(n,sizeof(double));
 
 	// Llena matriz 1 y matriz 2
 	llenar(matriz1, n);
@@ -36,20 +58,14 @@ int main(int argc, char const *argv[])
 	printf("MATRIZ 1\n"); imprimir(matriz1, n);
 	printf("MATRIZ 2\n"); imprimir(matriz2, n);
 
-//	printf("SUMA\n"); sumar(matriz1, matriz2, suma, n); imprimir(suma, n);
-//	printf("RESTA\n"); restar(matriz1, matriz2, resta, n); imprimir(resta, n);
-//	printf("MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); imprimir(mul, n);
-//	printf("TRANSPUESTA\n"); transpuesta(matriz1, tran, n); imprimir(tran, n);
+	printf("SUMA\n"); sumar(matriz1, matriz2, suma, n); imprimir(suma, n);
+	printf("RESTA\n"); restar(matriz1, matriz2, resta, n); imprimir(resta, n);
+	printf("MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); imprimir(mul, n);
+	printf("TRANSPUESTA\n"); transpuesta(matriz1, tran, n); imprimir(tran, n);
 	printf("INVERSA\n"); inversa(matriz1, inv, n); imprimir(inv, n);
 	return 0;
 }
-void iniciar(double **m, int n)
-{
-	int i;
-	m = (double**)calloc(n,sizeof(double*));
-	for (i = 0; i < n; i++)
-		m[i] = (double*)calloc(n,sizeof(double));	
-}
+
 void imprimir(double **m, int n)
 {
 	int i, j;
