@@ -1,5 +1,3 @@
-//Compilar Linux: gcc operacionesMatrices.c -o operacionesMatrices
-//Ejecutar: ./operacionesMatrices
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -25,8 +23,8 @@ int inversa(double **matriz, double **resultado, int n);
 double determinante(double **matriz, int n);
 void crearArchivo(double **matriz, int n, char *nombre, char *directorio);
 int potencia(int base, int pot);
-void inicializar(double **matriz, int n);
 void imprimirArchivo(char *directorio, char *nombre);
+
 int main(int argc, char const *argv[])
 {
 	int i, n;
@@ -146,17 +144,18 @@ int main(int argc, char const *argv[])
 		// Para que el padre haga otra cosa, sino se omite
 			for(i = 0; i < 5; i++)
 				wait(0); 
-				printf(" ----------------------------------\n");
-				printf(" ----------- RESULTADOS -----------\n");
-				printf(" ----------------------------------\n");
+			
+			printf(" ----------------------------------\n");
+			printf(" ----------- RESULTADOS -----------\n");
+			printf(" ----------------------------------\n");
 				
-				printf("SUMA\n"); imprimirArchivo(path, "/suma.txt");
-				printf("\nRESTA\n"); imprimirArchivo(path, "/resta.txt");
-				printf("\nMULTIPLICAR\n"); imprimirArchivo(path, "/mul.txt");
-				printf("\nTRANSPUESTA MATRIZ 1\n"); imprimirArchivo(path, "/tran1.txt");
-				printf("\nTRANSPUESTA MATRIZ 2\n"); imprimirArchivo(path, "/tran2.txt");
-				printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
-				printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
+			printf("SUMA\n"); imprimirArchivo(path, "/suma.txt");
+			printf("\nRESTA\n"); imprimirArchivo(path, "/resta.txt");
+			printf("\nMULTIPLICAR\n"); imprimirArchivo(path, "/mul.txt");
+			printf("\nTRANSPUESTA MATRIZ 1\n"); imprimirArchivo(path, "/tran1.txt");
+			printf("\nTRANSPUESTA MATRIZ 2\n"); imprimirArchivo(path, "/tran2.txt");
+			printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
+			printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
     }    
 	return 0;
 }
@@ -209,6 +208,7 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
     strcpy(directorio, aux);
     free(aux); free(dir); 
 }
+
 void imprimirArchivo(char *directorio, char *nombre)
 {
 	char* dir = (char *)calloc(2000, sizeof(char));
@@ -244,6 +244,7 @@ void imprimirArchivo(char *directorio, char *nombre)
    	free(contenido);
     strcpy(directorio, aux); 
 }
+
 char* leerDirectorio()
 {
 	char* directorio = (char*)calloc(2000,sizeof(char));
@@ -251,6 +252,7 @@ char* leerDirectorio()
 	scanf("%s", directorio);
 	return directorio;
 }
+
 void imprimir(double **m, int n)
 {
 	int i, j;
@@ -275,6 +277,7 @@ void llenar(double **m, int n)
 		}
 	}
 }
+
 void sumar(double **m1, double **m2, double **resultado, int n)
 {
 	int i, j;
@@ -309,6 +312,7 @@ void multiplicar(double **m1, double **m2, double **resultado, int n)
 		}
 	}
 }
+
 void transpuesta(double **m, double **resultado, int n)
 {
 	int i, j;
@@ -318,6 +322,7 @@ void transpuesta(double **m, double **resultado, int n)
 			resultado[i][j] = m[j][i];
 	}
 }
+
 bool esCero(double x)
 {
 	return fabs(x) < 1e-8;
@@ -422,6 +427,7 @@ int inversa(double **A, double **resultado, int n)
 	}
 	return tieneInversa;
 }
+
 int potencia(int base, int pot)
 {
 	int i, resultado = 1;

@@ -1,12 +1,19 @@
-//Compilar Linux: gcc operacionesMatrices.c -lm -o operacionesMatrices
-//Ejecutar: ./operacionesMatrices
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
 #include <math.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
 
 // Declaracion de funciones
+char* leerDirectorio();
+int potencia(int base, int pot);
 void imprimir(double **m, int n);
 void llenar(double **m, int n);
 void sumar(double **m1, double **m2, double **resultado, int n);
@@ -15,6 +22,8 @@ void multiplicar(double **m1, double **m2, double **resultado, int n);
 void transpuesta(double **m, double **resultado, int n);
 int inversa(double **matriz, double **resultado, int n);
 double determinante(double **matriz, int n);
+void crearArchivo(double **matriz, int n, char *nombre, char *directorio);
+void imprimirArchivo(char *directorio, char *nombre);
 
 int main(int argc, char const *argv[])
 {
@@ -61,28 +70,156 @@ int main(int argc, char const *argv[])
 	for (i = 0; i < n; i++)
 		inv2[i] = (double*)calloc(n,sizeof(double));
 
-	// Llena matriz 1 y matriz 2
-	llenar(matriz1, n);
-	llenar(matriz2, n);
+	// CREAR DIRECTORIO
+	char* path = leerDirectorio();//Obtenemos el directorio desde la entrada de teclado
+	//Llamda al sistema mkdir recibe la ruta del directorio a crear, y los permisos de escritura, lectura y ejecucion para cada tipo de usuario
+	//Retorna -1 si ocurrieron errores
+	if(mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) ==-1)
+	{
+		perror(path);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
 
-	printf("MATRIZ 1\n"); imprimir(matriz1, n);
-	printf("MATRIZ 2\n"); imprimir(matriz2, n);
+		// Llena matriz 1 y matriz 2
+		llenar(matriz1, n);
+		llenar(matriz2, n);
 
-	printf("SUMA\n"); sumar(matriz1, matriz2, suma, n); imprimir(suma, n);
-	printf("RESTA\n"); restar(matriz1, matriz2, resta, n); imprimir(resta, n);
-	printf("MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); imprimir(mul, n);
-	printf("TRANSPUESTA MATRIZ 1\n"); transpuesta(matriz1, tran1, n); imprimir(tran1, n);
-	printf("TRANSPUESTA MATRIZ 2\n"); transpuesta(matriz2, tran2, n); imprimir(tran2, n);
+		printf("MATRIZ 1\n"); imprimir(matriz1, n);
+		printf("MATRIZ 2\n"); imprimir(matriz2, n);
 
-	printf("INVERSA MATRIZ 1\n"); 
-	//Revisamos si la maztriz tiene inversa
-	if(inversa(matriz1, inv1, n) != 0) 
-		imprimir(inv1, n);
+		printf("SUMA\n"); sumar(matriz1, matriz2, suma, n); 
+		crearArchivo(suma, n, "/suma.txt", path);
 
-	printf("INVERSA MATRIZ 2\n"); 
-	if(inversa(matriz2, inv2, n) != 0) 
-		imprimir(inv2, n);
+		printf("RESTA\n"); restar(matriz1, matriz2, resta, n); 
+		crearArchivo(resta, n, "/resta.txt", path);
+
+		printf("MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); 
+		crearArchivo(mul, n, "/mul.txt", path);
+		
+		printf("TRANSPUESTA MATRIZ 1\n"); transpuesta(matriz1, tran1, n); 
+		crearArchivo(tran1, n, "/tran1.txt", path);
+
+		printf("TRANSPUESTA MATRIZ 2\n"); transpuesta(matriz2, tran2, n); 
+		crearArchivo(tran2, n, "/tran2.txt", path);
+
+		printf("INVERSA MATRIZ 1\n"); 
+		//Revisamos si la maztriz tiene inversa
+		if(inversa(matriz1, inv1, n) != 0) 
+			crearArchivo(inv1, n, "/inversa_1.txt", path);
+
+		printf("INVERSA MATRIZ 2\n"); 
+		if(inversa(matriz2, inv2, n) != 0) 
+			crearArchivo(inv2, n, "/inversa_2.txt", path);
+
+		printf(" ----------------------------------\n");
+		printf(" ----------- RESULTADOS -----------\n");
+		printf(" ----------------------------------\n");
+				
+		printf("SUMA\n"); imprimirArchivo(path, "/suma.txt");
+		printf("\nRESTA\n"); imprimirArchivo(path, "/resta.txt");
+		printf("\nMULTIPLICAR\n"); imprimirArchivo(path, "/mul.txt");
+		printf("\nTRANSPUESTA MATRIZ 1\n"); imprimirArchivo(path, "/tran1.txt");
+		printf("\nTRANSPUESTA MATRIZ 2\n"); imprimirArchivo(path, "/tran2.txt");
+		printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
+		printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
+	}
 	return 0;
+}
+
+void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
+{
+    int i,j;
+    char* dir = (char *)calloc(2000, sizeof(char));
+    char* aux = (char *)calloc(2000, sizeof(char));
+    char num[15];
+    strcpy(aux, directorio);
+    strcat(directorio, nombre);
+    strcpy(dir, directorio);
+
+    // LLamada al sistema cret, recibe la ruta del archivo a crear y los permisos
+    // Retorna -1 si hay errores
+    if(creat(directorio, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+    {
+        perror(directorio);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+    	int a = open(directorio, O_WRONLY | O_APPEND);
+    	if(a == -1)
+    	{
+    		perror(directorio);
+        	exit(EXIT_FAILURE);
+    	}
+    	else
+    	{
+    		for (i = 0; i < n; i++)
+        	{
+            	for(j = 0; j< n; j++)
+            	{
+            		sprintf(num, "%.3f\t", matriz[i][j]);
+                	if(!write(a, num, strlen(num)) == strlen (num))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+            	}
+            	if(!write(a, "\n", strlen("\n")) == strlen ("\n"))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+        	}
+    	}
+    }
+    strcpy(directorio, aux);
+    free(aux); free(dir); 
+}
+
+void imprimirArchivo(char *directorio, char *nombre)
+{
+	char* dir = (char *)calloc(2000, sizeof(char));
+    char* aux = (char *)calloc(2000, sizeof(char));
+   	strcpy(aux, directorio);
+    strcpy(dir, directorio);
+    strcat(dir, nombre);
+
+    int archivo = open(dir, O_RDONLY);
+    if(archivo == -1)
+    {
+    	perror(dir);
+    	exit(EXIT_FAILURE);
+    }
+    struct stat sb;
+    if(stat(dir, &sb) == -1)
+    {
+    	perror(dir);
+    	exit(EXIT_FAILURE);
+    }
+   	long long longitud = (long long) sb.st_size;
+   	char *contenido = (char *)calloc(longitud, sizeof(char));
+   
+   	if(read(archivo, contenido, longitud) == longitud)
+   	{
+   		printf("%s", contenido);
+   	}
+   	if(close(archivo) == -1)
+   	{
+   		perror(dir);
+   		exit(EXIT_FAILURE);
+   	}
+   	free(contenido);
+    strcpy(directorio, aux); 
+}
+
+char* leerDirectorio()
+{
+	char* directorio = (char*)calloc(2000,sizeof(char));
+	printf("Ingrese el nuevo directorio: ");
+	scanf("%s", directorio);
+	return directorio;
 }
 
 void imprimir(double **m, int n)
@@ -109,6 +246,7 @@ void llenar(double **m, int n)
 		}
 	}
 }
+
 void sumar(double **m1, double **m2, double **resultado, int n)
 {
 	int i, j;
@@ -143,6 +281,7 @@ void multiplicar(double **m1, double **m2, double **resultado, int n)
 		}
 	}
 }
+
 void transpuesta(double **m, double **resultado, int n)
 {
 	int i, j;
@@ -152,6 +291,7 @@ void transpuesta(double **m, double **resultado, int n)
 			resultado[i][j] = m[j][i];
 	}
 }
+
 bool esCero(double x)
 {
 	return fabs(x) < 1e-8;
@@ -188,7 +328,7 @@ double determinante(double **m, int n)
                     }
             }
         //Recursividad, repite la funcion
-        aux = pow(-1, 2+j)*m[0][j]*determinante(menor, n-1);
+        aux = potencia(-1, 2+j)*m[0][j]*determinante(menor, n-1);
         det += aux;
 
         for(int x = 0; x<(n-1); x++)
@@ -255,4 +395,13 @@ int inversa(double **A, double **resultado, int n)
 		}
 	}
 	return tieneInversa;
+}
+
+int potencia(int base, int pot)
+{
+	int i, resultado = 1;
+	for(i = 0; i < pot; i++)
+		resultado = base * resultado;
+
+	return resultado;
 }
