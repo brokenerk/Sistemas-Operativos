@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <math.h>
+#include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -86,6 +87,9 @@ int main(int argc, char const *argv[])
 		llenar(matriz1, n);
 		llenar(matriz2, n);
 
+		printf("MATRIZ 1\n"); imprimir(matriz1, n);
+		printf("MATRIZ 2\n"); imprimir(matriz2, n);
+
     	// CREAMOS LOS PROCESOS
 		int id_proc;
 		for(i = 0; i<5; i++)
@@ -96,28 +100,28 @@ int main(int argc, char const *argv[])
 				if(i == 0)
 				{
 					// PROCESO SUMA
-					printf("----------- SUMA");
+					printf("----------- SUMA\n");
 					sumar(matriz1, matriz2, suma, n);
 					crearArchivo(suma, n, "/suma.txt", path);
 				}	
 				if(i == 1)
 				{
 					// PROCESO RESTA
-					printf("------------ RESTA");
+					printf("------------ RESTA\n");
 					restar(matriz1, matriz2, resta, n);
 					crearArchivo(resta, n, "/resta.txt", path);
 				}
 				if(i == 2)
 				{
 					// PROCESO MULTIPLICACION
-					printf("----------- MULTIPLICACION");
+					printf("----------- MULTIPLICACION\n");
 					multiplicar(matriz1, matriz2, mul, n);
 					crearArchivo(mul, n, "/mul.txt", path);
 				}
 				if(i == 3)
 				{
 					// PROCESO TRANSPUESTA
-					printf("--------- TRANSPUESTA");
+					printf("--------- TRANSPUESTA\n");
 					transpuesta(matriz1, tran1, n);
 					crearArchivo(tran1, n, "/tran1.txt", path);
 					
@@ -127,7 +131,7 @@ int main(int argc, char const *argv[])
 				if(i == 4)
 				{
 					// PROCESO INVERSA
-					printf("--------- INVERSA");
+					printf("--------- INVERSA\n");
 					
 					//Revisamos si la maztriz tiene inversa
 					if(inversa(matriz1, inv1, n) != 0) 
@@ -147,12 +151,12 @@ int main(int argc, char const *argv[])
 				printf(" ----------------------------------\n");
 				
 				printf("SUMA\n"); imprimirArchivo(path, "/suma.txt");
-				printf("RESTA\n"); imprimirArchivo(path, "/resta.txt");
-				printf("MULTIPLICAR\n"); imprimirArchivo(path, "/mul.txt");
-				printf("TRANSPUESTA MATRIZ 1\n"); imprimirArchivo(path, "/tran1.txt");
-				printf("TRANSPUESTA MATRIZ 2\n"); imprimirArchivo(path, "/tran2.txt");
-				printf("INVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
-				printf("INVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
+				printf("\nRESTA\n"); imprimirArchivo(path, "/resta.txt");
+				printf("\nMULTIPLICAR\n"); imprimirArchivo(path, "/mul.txt");
+				printf("\nTRANSPUESTA MATRIZ 1\n"); imprimirArchivo(path, "/tran1.txt");
+				printf("\nTRANSPUESTA MATRIZ 2\n"); imprimirArchivo(path, "/tran2.txt");
+				printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
+				printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
     }    
 	return 0;
 }
@@ -161,6 +165,7 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
     int i,j;
     char* dir = (char *)calloc(2000, sizeof(char));
     char* aux = (char *)calloc(2000, sizeof(char));
+    char num[15];
     strcpy(aux, directorio);
     strcat(directorio, nombre);
     strcpy(dir, directorio);
@@ -174,18 +179,35 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
     }
     else
     {
-        FILE *f = fopen(directorio, "w");
-        for (i = 0; i < n; i++)
-        {
-            for(j = 0; j< n; j++)
-            {
-                fprintf(f, "%.3f\t", matriz[i][j]);
-            }
-            fprintf(f, "\n");
-        }    
+    	int a = open(directorio, O_WRONLY | O_APPEND);
+    	if(a == -1)
+    	{
+    		perror(directorio);
+        	exit(EXIT_FAILURE);
+    	}
+    	else
+    	{
+    		for (i = 0; i < n; i++)
+        	{
+            	for(j = 0; j< n; j++)
+            	{
+            		sprintf(num, "%.3f\t", matriz[i][j]);
+                	if(!write(a, num, strlen(num)) == strlen (num))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+            	}
+            	if(!write(a, "\n", strlen("\n")) == strlen ("\n"))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+        	}
+    	}
     }
     strcpy(directorio, aux);
-    free(aux); free(dir);   
+    free(aux); free(dir); 
 }
 void imprimirArchivo(char *directorio, char *nombre)
 {
@@ -212,7 +234,7 @@ void imprimirArchivo(char *directorio, char *nombre)
    
    	if(read(archivo, contenido, longitud) == longitud)
    	{
-   		printf("%s\n", contenido);
+   		printf("%s", contenido);
    	}
    	if(close(archivo) == -1)
    	{
