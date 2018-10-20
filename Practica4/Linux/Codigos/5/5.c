@@ -33,7 +33,8 @@ void imprimirArchivo(char *directorio, char *nombre);
 int main(int argc, char const *argv[])
 {
 	// CREAR DIRECTORIO
-	char* path = leerDirectorio();//Obtenemos el directorio desde la entrada de teclado
+	// Obtenemos el directorio desde la entrada de teclado
+	char* path = leerDirectorio(); 
 	
 	//Variables para medición de tiempos
 	double utime0, stime0, wtime0,utime1, stime1, wtime1; 
@@ -43,7 +44,7 @@ int main(int argc, char const *argv[])
 	double **matriz1, **matriz2, **suma, **resta, **mul, **tran1, **tran2, **inv1, **inv2;
 	time_t t;
 	srand((unsigned) time(&t));
-	n = 10;
+	n = 10; // Tam de la matriz cuadrada
 
 	// Inicializa las matrices.
 	matriz1 = (double**)calloc(n,sizeof(double*));
@@ -83,8 +84,9 @@ int main(int argc, char const *argv[])
 		inv2[i] = (double*)calloc(n,sizeof(double));
 
 	
-	//Llamda al sistema mkdir recibe la ruta del directorio a crear, y los permisos de escritura, lectura y ejecucion para cada tipo de usuario
-	//Retorna -1 si ocurrieron errores
+	// Llamda al sistema mkdir recibe la ruta del directorio a crear, 
+	// y los permisos de escritura, lectura y ejecucion para cada tipo de usuario
+	// Retorna -1 si ocurrieron errores
 	if(mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) ==-1)
 	{
 		perror(path);
@@ -93,8 +95,7 @@ int main(int argc, char const *argv[])
     else
     {
     	// Llena matriz 1 y matriz 2
-		llenar(matriz1, n);
-		llenar(matriz2, n);
+		llenar(matriz1, n); llenar(matriz2, n);
 
 		printf("MATRIZ 1\n"); imprimir(matriz1, n);
 		printf("MATRIZ 2\n"); imprimir(matriz2, n);
@@ -152,9 +153,9 @@ int main(int argc, char const *argv[])
 				exit(0); // Para que no cree hijos de hijos
 			} 
 		} 
-		// Para que el padre haga otra cosa, sino se omite
+		// Para que el padre haga el proceso de leer los archivos
 			for(i = 0; i < 5; i++)
-				wait(0); 
+				wait(0); // Espera 5 procesos
 			
 			printf(" ----------------------------------\n");
 			printf(" ----------- RESULTADOS -----------\n");
@@ -349,16 +350,16 @@ double determinante(double **m, int n)
 {  
 	double det = 0, aux = 0;
     int c;
-    //Si el orden es de 2, multiplica cruzadon directamente
+    // Si el orden es de 2, multiplica cruzadon directamente
     if(n==2)
         return m[0][0]*m[1][1] - m[1][0]*m[0][1];
     else
 	{
 		for(int j=0; j<n; j++)
 		{
-			//Crea arreglo dinamico temporal
+			// Crea arreglo dinamico temporal
 			double **menor = (double **)malloc(sizeof(double)*(n-1));
-			//Redimensiona
+			// Redimensiona
             for(int i=0; i<(n-1); i++) 
 				menor[i] = (double *)malloc(sizeof(double)*(n-1));
             for(int k=1; k<n; k++)
@@ -375,15 +376,15 @@ double determinante(double **m, int n)
                         }
                     }
             }
-        //Recursividad, repite la funcion
+        // Recursividad, repite la funcion
         aux = potencia(-1, 2+j)*m[0][j]*determinante(menor, n-1);
         det += aux;
 
         for(int x = 0; x<(n-1); x++)
-            free(menor[x]);//Libera espacio en memoria     
+            free(menor[x]); // Libera espacio en memoria     
         free(menor);
         }
-    return det;//Devuelve resultado
+    return det; // Devuelve resultado
     }
 }
 
@@ -396,7 +397,8 @@ int inversa(double **A, double **resultado, int n)
 		tieneInversa=0;
 		printf("La matriz no tiene inversa. Determinante = 0\n\n");
 	}
-	else{
+	else
+	{
 		tieneInversa=1;
 		int i, j, k, l; 
 		double *tmp;
