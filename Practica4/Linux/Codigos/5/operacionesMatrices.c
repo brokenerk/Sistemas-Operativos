@@ -1,3 +1,7 @@
+//	Compilación:
+//	gcc tiempo.c -c
+//	gcc operacionesMatrices.c tiempo.o -o o
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,6 +14,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include "tiempo.h"
 
 // Declaracion de funciones
 char* leerDirectorio();
@@ -27,6 +32,13 @@ void imprimirArchivo(char *directorio, char *nombre);
 
 int main(int argc, char const *argv[])
 {
+	// CREAR DIRECTORIO
+	char* path = leerDirectorio();//Obtenemos el directorio desde la entrada de teclado
+	
+	//Variables para medición de tiempos
+	double utime0, stime0, wtime0,utime1, stime1, wtime1; 
+	uswtime(&utime0, &stime0, &wtime0);
+
 	int i, n;
 	double **matriz1, **matriz2, **suma, **resta, **mul, **tran1, **tran2, **inv1, **inv2;
 	time_t t;
@@ -70,8 +82,6 @@ int main(int argc, char const *argv[])
 	for (i = 0; i < n; i++)
 		inv2[i] = (double*)calloc(n,sizeof(double));
 
-	// CREAR DIRECTORIO
-	char* path = leerDirectorio();//Obtenemos el directorio desde la entrada de teclado
 	//Llamda al sistema mkdir recibe la ruta del directorio a crear, y los permisos de escritura, lectura y ejecucion para cada tipo de usuario
 	//Retorna -1 si ocurrieron errores
 	if(mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) ==-1)
@@ -125,6 +135,12 @@ int main(int argc, char const *argv[])
 		printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "/inversa_1.txt");
 		printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "/inversa_2.txt");
 	}
+
+	uswtime(&utime1, &stime1, &wtime1);
+
+	//Cálculo del tiempo de ejecución del programa
+	printf("\n\nTiempo ejecucion:  %.4f s\n",  wtime1 - wtime0);
+
 	return 0;
 }
 
@@ -173,6 +189,7 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
                 	}
         	}
     	}
+    	close(a);
     }
     strcpy(directorio, aux);
     free(aux); free(dir); 
