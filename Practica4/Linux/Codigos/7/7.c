@@ -14,9 +14,10 @@ int main(){
 	argv[2] = "/home/enrike/Escritorio/P4-SO/7/inversa";
 	argv[3] = NULL;
 
-	if(pid = fork() == 0)//Proceso Hijo 1: Expresion
+	if(pid = fork() == 0)//Proceso Hijo-Padre
 	{
-		if(pid = fork() == 0){
+		if(pid = fork() == 0)//Proceso Hijo 1: Expresion
+		{
 			printf("Soy el hijo 1 ejecutando: %s\n", argv[0]);
 			int e = execv(argv[0], argv);
 			if(e == -1){
