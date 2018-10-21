@@ -1,15 +1,11 @@
+#include <windows.h>
+#include <time.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <string.h>
 #include <stdbool.h>
 #include <math.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <string.h>
 
 // Declaracion de funciones
 void imprimir(double **m, int n);
@@ -17,9 +13,9 @@ void llenar(double **m, int n);
 int inversa(double **matriz, double **resultado, int n);
 int potencia(int base, int pot);
 double determinante(double **matriz, int n);
-void crearArchivo(double **matriz, int n, char *directorio);
+void crearArchivo(char *ruta, double **m);
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     int i, n;
     double **matriz1, **matriz2, **inversa1, **inversa2;
@@ -44,10 +40,13 @@ int main(int argc, char const *argv[])
         inversa2[i] = (double*)calloc(n,sizeof(double));
 
     // CREAR DIRECTORIO
-    char* path1 = (char*)calloc(2000,sizeof(char));
-    char* path2 = (char*)calloc(2000,sizeof(char));
-    path1 = "/home/enrike/Escritorio/P4-SO/8/Resultados/inv_1.txt";
-    path2 = "/home/enrike/Escritorio/P4-SO/8/Resultados/inv_2.txt";
+    char* dir1 = (char*)calloc(2000,sizeof(char));
+    dir1 = 
+    "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados\\inversa1.txt";
+
+    char* dir2 = (char*)calloc(2000,sizeof(char));
+    dir2 = 
+    "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados\\inversa2.txt";
 
 
     // Llena matriz 1 y matriz 2
@@ -60,57 +59,104 @@ int main(int argc, char const *argv[])
      
     inversa(matriz1, inversa1, n); 
     inversa(matriz2, inversa2, n); 
-    crearArchivo(inversa1, n, path1);
-    crearArchivo(inversa2, n, path2);
+    crearArchivo(dir1, inversa1);
+    crearArchivo(dir2, inversa2);
     
     printf("ARCHIVOS INVERSAS ESCRITO\n");
-    printf("%s", path1);
+    printf("%s", dir1);
     printf("\n");
-    printf("%s", path2);
+    printf("%s", dir2);
     printf("\n");
+
+    //LOS ARCHIVOS NO DEBEN EXISTIR, SINO ARROJARA ERROR Y NO ESCRIBIRA NADA
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    i = 0;
+    ZeroMemory(&si, sizeof(si));
+    si.cb=sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+    if(argc!=2)
+    {
+        //printf(/*Usar: %s */"Soy el proceso hijo \n"/*, argv[0]*/);
+        return 0;
+    }
+    //Creacion proceso hijo
+
+        if(!CreateProcess(NULL, argv[0],NULL,NULL,FALSE,0,NULL,NULL,&si,&pi))
+        {
+            printf("Fallo al invocar CreateProcess(%d)\n",GetLastError());
+            return 0;
+        }
+    //Proceso Padre
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    
+    //Terminacion controlada del proceso e hilo asociado de ejecucion
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
 
     return 0;
 }
 
-void crearArchivo(double **matriz, int n, char *directorio)
+void crearArchivo(char *ruta, double **m)
 {
     int i,j;
-    char num[15];
+    char num[20];
 
-    if(creat(directorio, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
+    HANDLE h = CreateFile(ruta,                     //ruta del archivo
+                        GENERIC_WRITE,          //abrir para escribir
+                        0,                      //no compartir
+                        NULL,                       // seguridad por default
+                        CREATE_ALWAYS,              //crear siempre
+                        FILE_ATTRIBUTE_TEMPORARY,   //archivo normal
+                        NULL);                  //sin tributos
+
+    if (h == INVALID_HANDLE_VALUE)
     {
-        perror(directorio);
+        perror(ruta);
         exit(EXIT_FAILURE);
     }
     else
     {
-        int a = open(directorio, O_WRONLY | O_APPEND);
-        if(a == -1)
+        DWORD bytesEscritos = 0;
+
+        for(i=0 ; i<10 ; i++) // Escribimos 5 veces el texto en el archivo
         {
-            perror(directorio);
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            for (i = 0; i < n; i++)
+            for(j=0 ; j<10 ; j++) // Escribimos 5 veces el texto en el archivo
             {
-                for(j = 0; j< n; j++)
+                sprintf(num, "%.3f\t", m[i][j]);
+                /*Funcion WrifeFile recibe los parametros a continuacion y devuelve un true si no existieron errores*/
+                BOOL escribir = WriteFile( 
+                            h,                          // abrir handle del archivo
+                            num,                        // informacion a escribir
+                            (DWORD)strlen(num),         // tamaño de bytes a escribir
+                            &bytesEscritos,             // tamaño de bytes escrit
+                            NULL);                      // no overlapped structure
+
+                if(!escribir)
                 {
-                    sprintf(num, "%.3f\t", matriz[i][j]);
-                    if(!write(a, num, strlen(num)) == strlen (num))
-                    {
-                        perror(directorio);
-                        exit(EXIT_FAILURE);
-                    }
+                    perror(ruta);
+                    exit(EXIT_FAILURE);
                 }
-                if(!write(a, "\n", strlen("\n")) == strlen ("\n"))
-                    {
-                        perror(directorio);
-                        exit(EXIT_FAILURE);
-                    }
+            }
+            BOOL espacio = WriteFile( 
+                            h,                          // abrir handle del archivo
+                            "\n",                       // informacion a escribir
+                            (DWORD)strlen("\n"),        // tamaño de bytes a escribir
+                            &bytesEscritos,             // tamaño de bytes escrit
+                            NULL);                      // no overlapped structure
+            if(!espacio)
+            {
+                perror(ruta);
+                exit(EXIT_FAILURE);
             }
         }
-        close(a);
+        //Llamada al sistema CloseHandle recibe un descriptor de archivo y retorna un valor cero si han habido errores
+        if(CloseHandle(h) == 0)
+        {
+            perror(ruta);
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
