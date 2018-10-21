@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 
 int main()
 {
 	pid_t pid;
 	char *argv[3];
-	argv[0] = "/usuario/hola"; // Ruta 
+	argv[0] = "/home/enrike/Escritorio/P4-SO/6/hola"; 
+	// Ruta 
 	argv[1] = "Desde el Hijo"; 
 	argv[2] = NULL;
 	if((pid = fork()) == 0)
