@@ -1,0 +1,9 @@
+//Compilar: gcc 5_hijo.c -o hijo
+#include<windows.h>
+#include<stdio.h>
+
+int main(void)
+{
+	printf("Soy el hijo \n");
+	exit(0);
+}

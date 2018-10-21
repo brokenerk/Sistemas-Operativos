@@ -8,7 +8,8 @@ int main()
 {
 	pid_t pid;
 	char *argv[3];
-	argv[0] = "/home/enrike/Escritorio/P4-SO/6/hola"; 
+	argv[0] = 
+	"/home/enrike/Escritorio/P4-SO/6/hola"; 
 	// Ruta 
 	argv[1] = "Desde el Hijo"; 
 	argv[2] = NULL;
