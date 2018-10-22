@@ -1,7 +1,13 @@
-#include<windows.h>
-#include<stdio.h>
+#include <windows.h>
+#include <stdio.h>
+#include <time.h>
 
 int main(int argc, char *argv[]){
+	clock_t tiempo_inicio, tiempo_final;
+	double segundos;
+
+	tiempo_inicio = clock();
+
 	HANDLE hProcess;
 	HANDLE hThread;
 	STARTUPINFO si;
@@ -81,4 +87,9 @@ int main(int argc, char *argv[]){
 	WaitForSingleObject(pi.hProcess,INFINITE);
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
+
+	tiempo_final = clock();
+    segundos = (double)(tiempo_final - tiempo_inicio) / CLOCKS_PER_SEC;
+    //Cálculo del tiempo de ejecución del programa
+	printf("\n\nTiempo ejecucion:  %.4f s\n",  segundos);
 }
