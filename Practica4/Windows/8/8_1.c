@@ -1,7 +1,6 @@
 //	Compilación:
 //	gcc tiempo.c -c
 //	gcc operacionesMatrices.c tiempo.o -o o
-
 #include <windows.h>
 #include <time.h>
 #include <errno.h>
@@ -72,7 +71,6 @@ int main(int argc, char const *argv[])
 	inv2 = (double**)calloc(n,sizeof(double*));
 	for (i = 0; i < n; i++)
 		inv2[i] = (double*)calloc(n,sizeof(double));
-
 
 	char* path = (char*)calloc(2000,sizeof(char));
 	strcpy(path, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados0");

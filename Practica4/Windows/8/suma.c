@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
     printf("%s", dir);
     printf("\n");
 
-
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 	int i;

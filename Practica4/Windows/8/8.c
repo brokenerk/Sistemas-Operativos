@@ -1,11 +1,9 @@
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
-
 int main(int argc, char *argv[]){
 	clock_t tiempo_inicio, tiempo_final;
 	double segundos;
-
 	tiempo_inicio = clock();
 
 	HANDLE hProcess;
@@ -17,7 +15,6 @@ int main(int argc, char *argv[]){
 	ZeroMemory(&si, sizeof(si));
 	ZeroMemory(&pi, sizeof(pi));
 
-
 	if(!CreateProcess(NULL, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\suma.exe",
 		NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)){
 		printf("Fallo al crear el proceso (%d)\n",GetLastError());
@@ -28,8 +25,6 @@ int main(int argc, char *argv[]){
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
 
-
-	
 	if(!CreateProcess(NULL, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\resta.exe",
 		NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)){
 		printf("Fallo al crear el proceso (%d)\n",GetLastError());
@@ -39,8 +34,6 @@ int main(int argc, char *argv[]){
 	WaitForSingleObject(pi.hProcess,INFINITE);
 	CloseHandle(pi.hThread);
 	CloseHandle(pi.hProcess);
-
-
 
 	if(!CreateProcess(NULL, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\multiplicacion.exe",
 		NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)){

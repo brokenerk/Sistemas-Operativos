@@ -1,6 +1,6 @@
 //Compilar: gcc 7_hijo.c -o hijo
-#include<windows.h>
-#include<stdio.h>
+#include <windows.h>
+#include <stdio.h>
 int main(int argc, char *argv[])
 {
 	STARTUPINFO si;
@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
 	printf("Creando nietos \n");
 	for(int i=0;i<3;i++)
 	{
-		if(!CreateProcess(NULL, "C:\\nieto.exe", NULL,NULL,FALSE,0,NULL,NULL,&si,&pi))
+		if(!CreateProcess(NULL, 
+			"C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\7\\nieto.exe", 
+			NULL,NULL,FALSE,0,NULL,NULL,&si,&pi))
 		{
 			printf("Fallo al invocar CreateProcess(%d)\n",GetLastError());
 			return 0;
