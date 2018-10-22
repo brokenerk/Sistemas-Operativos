@@ -48,7 +48,6 @@ int main(int argc, char *argv[])
     dir2 = 
     "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados\\inversa2.txt";
 
-
     // Llena matriz 1 y matriz 2
     llenar(matriz1, n);
     llenar(matriz2, n);
@@ -56,7 +55,6 @@ int main(int argc, char *argv[])
     printf("MATRIZ 1\n"); imprimir(matriz1, n);
     printf("MATRIZ 2\n"); imprimir(matriz2, n);
 
-     
     inversa(matriz1, inversa1, n); 
     inversa(matriz2, inversa2, n); 
     crearArchivo(dir1, inversa1);
@@ -94,7 +92,6 @@ int main(int argc, char *argv[])
     //Terminacion controlada del proceso e hilo asociado de ejecucion
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
-
     return 0;
 }
 
@@ -102,7 +99,6 @@ void crearArchivo(char *ruta, double **m)
 {
     int i,j;
     char num[20];
-
     HANDLE h = CreateFile(ruta,                     //ruta del archivo
                         GENERIC_WRITE,          //abrir para escribir
                         0,                      //no compartir

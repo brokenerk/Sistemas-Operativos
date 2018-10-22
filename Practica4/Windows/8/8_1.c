@@ -1,7 +1,6 @@
 //	Compilación:
 //	gcc tiempo.c -c
 //	gcc operacionesMatrices.c tiempo.o -o o
-
 #include <windows.h>
 #include <time.h>
 #include <errno.h>
@@ -26,13 +25,15 @@ void imprimirArchivo(char *directorio, char *nombre);
 
 int main(int argc, char const *argv[])
 {
-	
+	clock_t tiempo_inicio, tiempo_final;
+	double segundos;
+
+	tiempo_inicio = clock();
 	int i, n;
 	double **matriz1, **matriz2, **suma, **resta, **mul, **tran1, **tran2, **inv1, **inv2;
 	time_t t;
 	srand((unsigned) time(&t));
 	n = 10;
-	clock_t start = clock();
 
 	// Inicializa las matrices.
 	matriz1 = (double**)calloc(n,sizeof(double*));
@@ -71,9 +72,8 @@ int main(int argc, char const *argv[])
 	for (i = 0; i < n; i++)
 		inv2[i] = (double*)calloc(n,sizeof(double));
 
-
 	char* path = (char*)calloc(2000,sizeof(char));
-	strcpy(path, "C:\\Users\\Abigail\\Desktop\\ESCUELA\\GitHub\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados\\");
+	strcpy(path, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados0");
 
 	// Llena matriz 1 y matriz 2
 	llenar(matriz1, n);
@@ -102,7 +102,7 @@ int main(int argc, char const *argv[])
 	printf("INVERSA MATRIZ 1\n"); 
 	//Revisamos si la maztriz tiene inversa
 	if(inversa(matriz1, inv1, n) != 0) 
-		crearArchivo(inv1,path, "inversa_1.txt");
+		crearArchivo(inv1, path, "inversa_1.txt");
 
 	printf("INVERSA MATRIZ 2\n"); 
 	if(inversa(matriz2, inv2, n) != 0) 
@@ -120,10 +120,18 @@ int main(int argc, char const *argv[])
     printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "inversa_1.txt");
     printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "inversa_2.txt");
 
+<<<<<<< HEAD
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;;
 	printf("Tiempo de ejecucion: %f\n", seconds);
 	
+=======
+    tiempo_final = clock();
+    segundos = (double)(tiempo_final - tiempo_inicio) / CLOCKS_PER_SEC;
+    //Cálculo del tiempo de ejecución del programa
+	printf("\n\nTiempo ejecucion:  %.4f s\n",  segundos);
+
+>>>>>>> be0b38c9e5485f06bc3fe10ac23a6eaf18a4049f
 	return 0;
 }
 
@@ -131,11 +139,11 @@ void crearArchivo(double **res, char* dir, char *nombre)
 {
     int i,j;
     char num[15];
-    char* ruta = (char *)calloc(2000, sizeof(char));
-    char* aux = (char *)calloc(2000, sizeof(char));
-    strcpy(aux, dir);
-    strcat(dir, nombre);
-    strcpy(ruta, dir);
+    char *name = (char *)calloc(150,sizeof(char));
+	strcpy(name, nombre);
+	char *ruta = (char *)calloc(150,sizeof(char));
+	// Contatenamos la ruta original con el nombre del archivo
+	strcat(strcat(strcpy(ruta, dir), "\\"), name);
 
     HANDLE h = CreateFile(ruta,						//ruta del archivo
 						GENERIC_WRITE,			//abrir para escribir
@@ -192,59 +200,50 @@ void crearArchivo(double **res, char* dir, char *nombre)
 	    	exit(EXIT_FAILURE);
 	    }
 	}
-	strcpy(dir, aux);
 }
 
 void imprimirArchivo(char *directorio, char *nombre)
 {
-    char *name = (char *)calloc(150,sizeof(char));
-    strcpy(name, nombre);
-    char *dir = (char *)calloc(150,sizeof(char));
-    // Contatenamos la ruta original con el nombre del archivo
-    strcat(strcpy(dir, directorio), name);
+	char *name = (char *)calloc(150,sizeof(char));
+	strcpy(name, nombre);
+	char *dir = (char *)calloc(150,sizeof(char));
+	// Contatenamos la ruta original con el nombre del archivo
+	strcat(strcat(strcpy(dir, directorio), "\\"), name);
 
-    HANDLE file;
-    DWORD BytesEscritos = 0;
-    char *contenido = (char*)calloc(1000000,sizeof(char));
-    file = CreateFile(
-         dir,
-         GENERIC_WRITE | GENERIC_READ,
-         FILE_SHARE_READ,
-         NULL,
-         OPEN_EXISTING,
-         FILE_ATTRIBUTE_NORMAL,
-         NULL);
+	HANDLE file;
+	DWORD BytesEscritos = 0;
+	char *contenido = (char*)calloc(1000000,sizeof(char));
+	file = CreateFile(
+	         dir,
+	         GENERIC_WRITE | GENERIC_READ,
+	         FILE_SHARE_READ,
+	         NULL,
+	         OPEN_EXISTING,
+	         FILE_ATTRIBUTE_NORMAL,
+	         NULL);
 
-    if(file == INVALID_HANDLE_VALUE)
-    {
-        printf("Error 1\n");
+	if(file == INVALID_HANDLE_VALUE)
+	{
+		printf("Error 1\n");
 	    perror(dir);
 	    exit(EXIT_FAILURE);
-    }
-    else
-    {
-    	if(ReadFile(file, contenido, 1000000, &BytesEscritos, NULL))
-    	{
+	}
+	else
+	{
+		if(ReadFile(file, contenido, 1000000, &BytesEscritos, NULL))
+	    {
 	      printf("%s", contenido);
 	    }
-    	free(contenido);
+	    free(contenido);
 
 	    if(CloseHandle(file) == 0)
 	    {
 	      perror(dir);
 	      exit(EXIT_FAILURE);
 	    }
-	}
-    free(name);
-    free(dir);
-}
-
-char* leerDirectorio()
-{
-	char* directorio = (char*)calloc(2000,sizeof(char));
-	printf("Ingrese el nuevo directorio: ");
-	scanf("%s", directorio);
-	return directorio;
+	  }
+	free(name);
+	free(dir);
 }
 
 void imprimir(double **m, int n)

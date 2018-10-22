@@ -1,6 +1,6 @@
 //Compilar: gcc 7_nieto.c -o nieto
-#include<windows.h>
-#include<stdio.h>
+#include <windows.h>
+#include <stdio.h>
 int main(int argc, char *argv[])
 {
 	STARTUPINFO si;

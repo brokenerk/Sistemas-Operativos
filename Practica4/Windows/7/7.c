@@ -1,8 +1,7 @@
 //Compilar: gcc 7.c -o 7
 //Ejecutar: 7 padre
-#include<windows.h>
-#include<stdio.h>
-
+#include <windows.h>
+#include <stdio.h>
 int main(int argc, char *argv[])
 {
 	HANDLE hProcess;

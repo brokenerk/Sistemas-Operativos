@@ -1,5 +1,5 @@
-#include<windows.h>
-#include<stdio.h>
+#include <windows.h>
+#include <stdio.h>
 int main(int argc, char *argv[])
 {
 	STARTUPINFO si;			//Estructura de informacion inicial para Windows
