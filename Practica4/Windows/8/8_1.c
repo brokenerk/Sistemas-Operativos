@@ -121,7 +121,7 @@ int main(int argc, char const *argv[])
     printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "inversa_2.txt");
 
 	clock_t end = clock();
-	float seconds = (float)(end - start);
+	float seconds = (float)(end - start) / CLOCKS_PER_SEC;;
 	printf("Tiempo de ejecucion: %f\n", seconds);
 	
 	return 0;
