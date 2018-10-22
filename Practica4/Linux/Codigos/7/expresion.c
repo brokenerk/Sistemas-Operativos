@@ -1,3 +1,4 @@
+//Compilar: gcc expresion.c -lm -o expresion
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
