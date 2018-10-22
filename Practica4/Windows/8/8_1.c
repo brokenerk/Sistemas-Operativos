@@ -32,6 +32,7 @@ int main(int argc, char const *argv[])
 	time_t t;
 	srand((unsigned) time(&t));
 	n = 10;
+	clock_t start = clock();
 
 	// Inicializa las matrices.
 	matriz1 = (double**)calloc(n,sizeof(double*));
@@ -119,6 +120,10 @@ int main(int argc, char const *argv[])
     printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "inversa_1.txt");
     printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "inversa_2.txt");
 
+	clock_t end = clock();
+	float seconds = (float)(end - start);
+	printf("Tiempo de ejecucion: %f\n", seconds);
+	
 	return 0;
 }
 
