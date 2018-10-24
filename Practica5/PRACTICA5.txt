@@ -1,0 +1,33 @@
+PRACTICA 5
+Administrador de procesos en Linux y Windows (2)
+
+* Revisión de la creación de procesos ligeros (Hilos) en linux y windows
+* Revisión de las llamadas al sistema y funciones en biblioteca para hilos
+  en ambos sistemas operativos.
+* Desarrollo de aplicaciones concurrentes usando hilos tanto en linux como 
+  en Windows.
+
+----> FUNCIONES DE BIBLIOTECA PARA HILOS EN LINUX
+	- pthread-create()	Función para crear un hilo
+	- thread-join()		Función para esperar la terminación de un hilo
+	- pthread-exit()    Función para terminar un hilo con posibilidad de devolver algun valor
+
+---> LLAMADAS AL SISTEMA PARA HILOS EN WINDOWS
+	- CreateThread() 			LLamada para la creación de un hilo
+	- WaitForSingleObject()		LLamada para esperar la terminación de un hilo
+
+---> PROTOTIPO DE LA FUNCIÓN QUE IMPLEMENTA A UN HILO
+
+	- LINUX
+		void *NOMBRE_HILO(void *arg);
+
+	- WINDOWS
+		DWORD WINAPI NOMBRE_HILO(LPVOID arg);
+
+---> OBSERVACIONES
+
+	pthread : Estandarizada POSIX para todos los sistemas UNIX
+	En linux solo espera recibir un argumento, entonces se pasa un arreglo o una 
+	estructura dependiendo de que queramos pasar.
+
+	Incluir gcc prog.c -lpthread -o prog
