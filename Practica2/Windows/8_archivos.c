@@ -99,7 +99,7 @@ int main(int argc, const char *argv[])
 							      GENERIC_WRITE,			//abrir para escribir
 							      0,						//no compartir
 							      NULL,						// seguridad por default
-							      CREATE_NEW,				//crear nuevo archivo solamente
+							      CREATE_ALWAYS,			//crear siempre
 							      FILE_ATTRIBUTE_TEMPORARY,	//archivo normal
 							      NULL);					//sin tributos
 

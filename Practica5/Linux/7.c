@@ -114,7 +114,6 @@ void copiarArchivo(char origen[], char destino[])
 //Funciones que ejecutaran los hilos creados
 void *hilo(void *arg)
 {
-
 	//Utilizamos la estructura que creamos
 	RUTA *directorios, *raices = (RUTA*)arg;
 	//Nos sirve para leer todos los directorios contenidos en una ruta
