@@ -100,7 +100,7 @@ int main(int argc, char const *argv[])
 		CloseHandle(manHilo[i]);
 	}
 	
-	// Ultimo proceso - Leer archivos
+	// Ultimo HILO - Leer archivos
 	int *opc = malloc(sizeof(int));
 	*opc = 5;
 	manHilo[5] = CreateThread(NULL, 0, funcionHilo, opc, 0, &idHilo[5]);
@@ -122,47 +122,53 @@ DWORD WINAPI funcionHilo(LPVOID lpParam)
 	int i;
 	if(opc == 0)
 	{
+		//HILO SUMA
 		suma = (double**)calloc(n,sizeof(double*));
 		for (i = 0; i < n; i++)
 			suma[i] = (double*)calloc(n,sizeof(double));
 
-		printf("SUMA\n"); sumar(matriz1, matriz2, suma, n); 
+		printf("Soy el hilo calculando la SUMA\n"); sumar(matriz1, matriz2, suma, n); 
 		crearArchivo(suma, path, "suma.txt");
 	}
 	else if(opc == 1)
 	{
-		printf("RESTA\n"); restar(matriz1, matriz2, resta, n); 
+		//HILO RESTA
+		printf("Soy el hilo calculando la RESTA\n"); restar(matriz1, matriz2, resta, n); 
 		crearArchivo(resta, path, "resta.txt");
 	}
 	else if(opc == 2)
 	{
-		printf("MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); 
+		//HILO MULTIPLICACION
+		printf("Soy el hilo calculando la MULTIPLICAR\n"); multiplicar(matriz1, matriz2, mul, n); 
 		crearArchivo(mul, path, "multiplicacion.txt");
 	}
 	else if(opc == 3)
 	{
-		printf("TRANSPUESTA MATRIZ 1\n"); transpuesta(matriz1, tran1, n); 
+		//HILO TRANSPUESTA
+		printf("Soy el hilo calculando la TRANSPUESTA MATRIZ 1\n"); transpuesta(matriz1, tran1, n); 
 		crearArchivo(tran1, path, "transpuesta_1.txt");
 		
-		printf("TRANSPUESTA MATRIZ 2\n"); transpuesta(matriz2, tran2, n); 
+		printf("Soy el hilo calculando la TRANSPUESTA MATRIZ 2\n"); transpuesta(matriz2, tran2, n); 
 		crearArchivo(tran2, path, "transpuesta_2.txt");
 	}
 	else if(opc == 4)
 	{
-		printf("INVERSA MATRIZ 1\n"); 
+		//HILO INVERSA
+		printf("Soy el hilo calculando la INVERSA MATRIZ 1\n"); 
 		//Revisamos si la maztriz tiene inversa
 		if(inversa(matriz1, inv1, n) != 0) 
 			crearArchivo(inv1, path, "inversa_1.txt");
 
-		printf("INVERSA MATRIZ 2\n"); 
+		printf("Soy el hilo calculando la INVERSA MATRIZ 2\n"); 
 		if(inversa(matriz2, inv2, n) != 0) 
 			crearArchivo(inv2, path, "inversa_2.txt");
 	}
 	else
 	{
-		printf(" ----------------------------------\n");
-		printf(" ----------- RESULTADOS -----------\n");
-		printf(" ----------------------------------\n");
+		//HILO RESULTADO
+		printf(" -------------------------------------\n");
+		printf(" -- Soy el hilo leeyendo RESULTADOS --\n");
+		printf(" -------------------------------------\n");
 
 		printf("SUMA\n"); imprimirArchivo(path, "suma.txt");
 		printf("\nRESTA\n"); imprimirArchivo(path, "resta.txt");
