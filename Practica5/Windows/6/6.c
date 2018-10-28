@@ -1,6 +1,4 @@
 //	Compilación:
-//	gcc tiempo.c -c
-//	gcc operacionesMatrices.c tiempo.o -o o
 
 #include <windows.h>
 #include <time.h>
