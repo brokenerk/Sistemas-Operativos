@@ -1,3 +1,4 @@
+// Compilar: gcc 2.c -lpthread -o 2
 #include <stdio.h>
 #include <pthread.h>
 
