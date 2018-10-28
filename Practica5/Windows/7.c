@@ -1,5 +1,5 @@
-//Compilar: gcc 7.c -lpthread -o 7
-//Ejecutar: ./7 [RutaOrigen] [RutaDestino]
+//Compilar: gcc 7.c -o 7
+//Ejecutar: 7 [RutaOrigen] [RutaDestino]
 
 #include <stdio.h>
 #include <windows.h>

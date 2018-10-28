@@ -1,4 +1,5 @@
-//	Compilación:
+//	Compilación: gcc 6.c -o 6
+//	Ejecutar: 6 [RutaDestino]
 
 #include <windows.h>
 #include <time.h>
@@ -59,9 +60,17 @@ int main(int argc, char const *argv[])
 	for (i = 0; i < n; i++)
 		inv2[i] = (double*)calloc(n, sizeof(double));
 
+	if(argc != 2)
+		exit(-1);
+	
 	path = (char*)calloc(2000, sizeof(char));
-	strcpy(path, "C:\\Users\\Abigail\\Desktop\\ESCUELA\\GitHub\\Sistemas-Operativos\\Practica5\\Windows\\6\\Resultados");
-	//strcpy(path, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados0");
+	strcpy(path, argv[1]);
+
+	if(!CreateDirectory(path, NULL))
+	{
+			perror(path);
+	        exit(-1);
+	}
 
 	// Llena matriz 1 y matriz 2
 	llenar(matriz1, n);
