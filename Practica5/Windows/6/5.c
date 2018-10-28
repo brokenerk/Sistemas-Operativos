@@ -93,7 +93,6 @@ int main(int argc, char const *argv[])
 		CloseHandle(manHilo[i]);
 	}
 	
-
 	// Ultimo proceso - Leer archivos
 	int *opc = malloc(sizeof(int));
 	*opc = 5;
