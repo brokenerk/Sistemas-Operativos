@@ -37,8 +37,8 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
     char* aux = (char *)calloc(2000, sizeof(char));
     char num[15];
     strcpy(aux, directorio);
-    strcat(aux, nombre);
-    strcpy(dir, aux);
+    strcat(directorio, nombre);
+    strcpy(dir, directorio);
 
     // LLamada al sistema cret, recibe la ruta del archivo a crear y los permisos
     // Retorna -1 si hay errores
@@ -77,7 +77,7 @@ void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
     	}
     	close(a);
     }
-//    strcpy(directorio, aux);
+    strcpy(directorio, aux);
     free(aux); free(dir); 
 }
 
