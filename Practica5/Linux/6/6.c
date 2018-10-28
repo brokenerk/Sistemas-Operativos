@@ -1,6 +1,6 @@
 //	Compilación:
 //	gcc tiempo.c -c
-//	gcc 5.c tiempo.o -o 5
+//	gcc 6.c tiempo.o -lpthread -o 6
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -123,29 +123,29 @@ void *hilo(void *arg)
 	int i = *((int*)arg);
 	if(i == 0)
 	{
-		// PROCESO SUMA
-		printf("----------- SUMA\n");
+		// HILO SUMA
+		printf("----------- Soy el hilo calculando la SUMA\n");
 		sumar(matriz1, matriz2, suma, n);
 		crearArchivo(suma, n, "/suma.txt", path);
 	}	
 	if(i == 1)
 	{
-		// PROCESO RESTA
-		printf("------------ RESTA\n");
+		// HILO RESTA
+		printf("------------ Soy el hilo calculando la RESTA\n");
 		restar(matriz1, matriz2, resta, n);
 		crearArchivo(resta, n, "/resta.txt", path);
 	}
 	if(i == 2)
 	{
-		// PROCESO MULTIPLICACION
-		printf("----------- MULTIPLICACION\n");
+		// HILO MULTIPLICACION
+		printf("----------- Soy el hilo calculando la MULTIPLICACION\n");
 		multiplicar(matriz1, matriz2, mul, n);
 		crearArchivo(mul, n, "/mul.txt", path);
 	}
 	if(i == 3)
 	{
-		// PROCESO TRANSPUESTA
-		printf("--------- TRANSPUESTA\n");
+		// HILO TRANSPUESTA
+		printf("--------- Soy el hilo calculando la TRANSPUESTA\n");
 		transpuesta(matriz1, tran1, n);
 		crearArchivo(tran1, n, "/tran1.txt", path);
 		
@@ -154,8 +154,8 @@ void *hilo(void *arg)
 	}
 	if(i == 4)
 	{
-		// PROCESO INVERSA
-		printf("--------- INVERSA\n");
+		// HILO INVERSA
+		printf("--------- Soy el hilo calculando la INVERSA\n");
 		
 		//Revisamos si la maztriz tiene inversa
 		if(inversa(matriz1, inv1, n) != 0) 
@@ -166,9 +166,9 @@ void *hilo(void *arg)
 	}
 	if(i == 5)
 	{
-		printf(" ----------------------------------\n");
-		printf(" ----------- RESULTADOS -----------\n");
-		printf(" ----------------------------------\n");
+		printf(" -------------------------------------\n");
+		printf(" -- Soy el hilo leeyendo RESULTADOS --\n");
+		printf(" -------------------------------------\n");
 			
 		printf("SUMA\n"); imprimirArchivo(path, "/suma.txt");
 		printf("\nRESTA\n"); imprimirArchivo(path, "/resta.txt");
