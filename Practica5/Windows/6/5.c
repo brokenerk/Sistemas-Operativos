@@ -28,7 +28,6 @@ int main(int argc, char const *argv[])
 	int i;
 	time_t t;
 	srand((unsigned) time(&t));
-	//n = 10;
 	
 	// Inicializa las matrices.
 	matriz1 = (double**)calloc(n,sizeof(double*));
@@ -66,6 +65,13 @@ int main(int argc, char const *argv[])
 	strcpy(path, "C:\\Users\\Abigail\\Desktop\\ESCUELA\\GitHub\\Sistemas-Operativos\\Practica5\\Windows\\6\\Resultados");
 	//strcpy(path, "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica4\\Windows\\8\\Resultados0");
 
+	// Llena matriz 1 y matriz 2
+	llenar(matriz1, n);
+	llenar(matriz2, n);
+
+	printf("MATRIZ 1\n"); imprimir(matriz1, n);
+	printf("MATRIZ 2\n"); imprimir(matriz2, n);
+
 	// --------------- HILOS -----------------
 	HANDLE manHilo[7];	// Manejador del Hilo
 	DWORD idHilo[7]; // Identificador de los hilos
@@ -87,8 +93,6 @@ int main(int argc, char const *argv[])
 		CloseHandle(manHilo[i]);
 	}
 	
-	printf("MATRIZ 1\n"); imprimir(matriz1, n);
-	printf("MATRIZ 2\n"); imprimir(matriz2, n);
 
 	// Ultimo proceso - Leer archivos
 	int *opc = malloc(sizeof(int));
@@ -110,11 +114,6 @@ DWORD WINAPI funcionHilo(LPVOID lpParam)
 {
 	int opc = *(int *)lpParam;
 	int i;
-
-	// Llena matriz 1 y matriz 2
-	llenar(matriz1, n);
-	llenar(matriz2, n);
-
 	if(opc == 0)
 	{
 		suma = (double**)calloc(n,sizeof(double*));
