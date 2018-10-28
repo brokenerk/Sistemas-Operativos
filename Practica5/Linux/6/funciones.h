@@ -1,14 +1,22 @@
-#include <windows.h>
-#include <time.h>
-#include <errno.h>
+//	Compilación:
+//	gcc tiempo.c -c
+//	gcc 5.c tiempo.o -o 5
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <time.h>
 #include <stdbool.h>
 #include <math.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include "tiempo.h"
 
 // Declaracion de funciones
-int potencia(int base, int pot);
 void imprimir(double **m, int n);
 void llenar(double **m, int n);
 void sumar(double **m1, double **m2, double **resultado, int n);
@@ -17,119 +25,99 @@ void multiplicar(double **m1, double **m2, double **resultado, int n);
 void transpuesta(double **m, double **resultado, int n);
 int inversa(double **matriz, double **resultado, int n);
 double determinante(double **matriz, int n);
-void crearArchivo(double **res, char* dir, char *nombre);
+void crearArchivo(double **matriz, int n, char *nombre, char *directorio);
+int potencia(int base, int pot);
 void imprimirArchivo(char *directorio, char *nombre);
 
-void crearArchivo(double **res, char* dir, char *nombre)
+
+void crearArchivo(double **matriz, int n, char *nombre, char *directorio)
 {
     int i,j;
+    char* dir = (char *)calloc(2000, sizeof(char));
+    char* aux = (char *)calloc(2000, sizeof(char));
     char num[15];
-    char *name = (char *)calloc(150,sizeof(char));
-	strcpy(name, nombre);
-	char *ruta = (char *)calloc(150,sizeof(char));
-	// Contatenamos la ruta original con el nombre del archivo
-	strcat(strcat(strcpy(ruta, dir), "\\"), name);
+    strcpy(aux, directorio);
+    strcat(directorio, nombre);
+    strcpy(dir, directorio);
 
-    HANDLE h = CreateFile(ruta,						//ruta del archivo
-						GENERIC_WRITE,			//abrir para escribir
-						0,						//no compartir
-						NULL,						// seguridad por default
-						CREATE_ALWAYS,				//crear siempre
-						FILE_ATTRIBUTE_TEMPORARY,	//archivo normal
-						NULL);					//sin tributos
-
-    if (h == INVALID_HANDLE_VALUE)
+    // LLamada al sistema cret, recibe la ruta del archivo a crear y los permisos
+    // Retorna -1 si hay errores
+    if(creat(directorio, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1)
     {
-    	perror(ruta);
+        perror(directorio);
         exit(EXIT_FAILURE);
     }
     else
     {
-    	DWORD bytesEscritos = 0;
-
-		for(i=0 ; i<10 ; i++) // Escribimos 5 veces el texto en el archivo
-		{
-			for(j=0 ; j<10 ; j++) // Escribimos 5 veces el texto en el archivo
-			{
-				sprintf(num, "%.3f\t", res[i][j]);
-		        /*Funcion WrifeFile recibe los parametros a continuacion y devuelve un true si no existieron errores*/
-				BOOL escribir = WriteFile( 
-		                    h,           				// abrir handle del archivo
-		                    num,      					// informacion a escribir
-		                    (DWORD)strlen(num),  		// tamaño de bytes a escribir
-		                    &bytesEscritos, 			// tamaño de bytes escrit
-		                    NULL);           			// no overlapped structure
-
-				if(!escribir)
-    			{
-    				perror(ruta);
-        			exit(EXIT_FAILURE);
-    			}
-    		}
-    		BOOL espacio = WriteFile( 
-		                    h,           				// abrir handle del archivo
-		                    "\n",      					// informacion a escribir
-		                    (DWORD)strlen("\n"),  		// tamaño de bytes a escribir
-		                    &bytesEscritos, 			// tamaño de bytes escrit
-		                    NULL);           			// no overlapped structure
-			if(!espacio)
-    		{
-    			perror(ruta);
-        		exit(EXIT_FAILURE);
-    		}
+    	int a = open(directorio, O_WRONLY | O_APPEND);
+    	if(a == -1)
+    	{
+    		perror(directorio);
+        	exit(EXIT_FAILURE);
     	}
-	    //Llamada al sistema CloseHandle recibe un descriptor de archivo y retorna un valor cero si han habido errores
-	    if(CloseHandle(h) == 0)
-	    {
-	    	perror(ruta);
-	    	exit(EXIT_FAILURE);
-	    }
-	}
+    	else
+    	{
+    		for (i = 0; i < n; i++)
+        	{
+            	for(j = 0; j< n; j++)
+            	{
+            		sprintf(num, "%.3f\t", matriz[i][j]);
+                	if(!write(a, num, strlen(num)) == strlen (num))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+            	}
+            	if(!write(a, "\n", strlen("\n")) == strlen ("\n"))
+                	{
+                		perror(directorio);
+        				exit(EXIT_FAILURE);
+                	}
+        	}
+    	}
+    	close(a);
+    }
+    strcpy(directorio, aux);
+    free(aux); free(dir); 
 }
 
 void imprimirArchivo(char *directorio, char *nombre)
 {
-	char *name = (char *)calloc(150,sizeof(char));
-	strcpy(name, nombre);
-	char *dir = (char *)calloc(150,sizeof(char));
-	// Contatenamos la ruta original con el nombre del archivo
-	strcat(strcat(strcpy(dir, directorio), "\\"), name);
+	char* dir = (char *)calloc(2000, sizeof(char));
+    char* aux = (char *)calloc(2000, sizeof(char));
+   	strcpy(aux, directorio);
+    strcpy(dir, directorio);
+    strcat(dir, nombre);
 
-	HANDLE file;
-	DWORD BytesEscritos = 0;
-	char *contenido = (char*)calloc(1000000,sizeof(char));
-	file = CreateFile(
-	         dir,
-	         GENERIC_WRITE | GENERIC_READ,
-	         FILE_SHARE_READ,
-	         NULL,
-	         OPEN_EXISTING,
-	         FILE_ATTRIBUTE_NORMAL,
-	         NULL);
-
-	if(file == INVALID_HANDLE_VALUE)
-	{
-		printf("Error 1\n");
-	    perror(dir);
-	    exit(EXIT_FAILURE);
-	}
-	else
-	{
-		if(ReadFile(file, contenido, 1000000, &BytesEscritos, NULL))
-	    {
-	      printf("%s", contenido);
-	    }
-	    free(contenido);
-
-	    if(CloseHandle(file) == 0)
-	    {
-	      perror(dir);
-	      exit(EXIT_FAILURE);
-	    }
-	  }
-	free(name);
-	free(dir);
+    int archivo = open(dir, O_RDONLY);
+    if(archivo == -1)
+    {
+    	perror(dir);
+    	exit(EXIT_FAILURE);
+    }
+    struct stat sb;
+    if(stat(dir, &sb) == -1)
+    {
+    	perror(dir);
+    	exit(EXIT_FAILURE);
+    }
+   	long long longitud = (long long) sb.st_size;
+   	char *contenido = (char *)calloc(longitud, sizeof(char));
+   
+   	if(read(archivo, contenido, longitud) == longitud)
+   	{
+   		printf("%s", contenido);
+   	}
+   	if(close(archivo) == -1)
+   	{
+   		perror(dir);
+   		exit(EXIT_FAILURE);
+   	}
+   	free(contenido);
+    strcpy(directorio, aux); 
 }
+
+
 
 void imprimir(double **m, int n)
 {
@@ -200,6 +188,7 @@ void transpuesta(double **m, double **resultado, int n)
 			resultado[i][j] = m[j][i];
 	}
 }
+
 bool esCero(double x)
 {
 	return fabs(x) < 1e-8;
@@ -208,23 +197,23 @@ bool esCero(double x)
 double determinante(double **m, int n)
 {  
 	double det = 0, aux = 0;
-    int c, i, j, k, l, x;
-    //Si el orden es de 2, multiplica cruzadon directamente
+    int c;
+    // Si el orden es de 2, multiplica cruzadon directamente
     if(n==2)
         return m[0][0]*m[1][1] - m[1][0]*m[0][1];
     else
 	{
-		for(j=0; j<n; j++)
+		for(int j=0; j<n; j++)
 		{
-			//Crea arreglo dinamico temporal
+			// Crea arreglo dinamico temporal
 			double **menor = (double **)malloc(sizeof(double)*(n-1));
-			//Redimensiona
-            for(i=0; i<(n-1); i++) 
+			// Redimensiona
+            for(int i=0; i<(n-1); i++) 
 				menor[i] = (double *)malloc(sizeof(double)*(n-1));
-            for(k=1; k<n; k++)
+            for(int k=1; k<n; k++)
 			{
                 c = 0;
-                    for(l=0; l<n; l++)
+                    for(int l=0; l<n; l++)
 					{
                         if(l!=j)
 						{
@@ -235,15 +224,15 @@ double determinante(double **m, int n)
                         }
                     }
             }
-        //Recursividad, repite la funcion
+        // Recursividad, repite la funcion
         aux = potencia(-1, 2+j)*m[0][j]*determinante(menor, n-1);
         det += aux;
 
-        for(x = 0; x<(n-1); x++)
-            free(menor[x]);//Libera espacio en memoria     
+        for(int x = 0; x<(n-1); x++)
+            free(menor[x]); // Libera espacio en memoria     
         free(menor);
         }
-    return det;//Devuelve resultado
+    return det; // Devuelve resultado
     }
 }
 
@@ -256,7 +245,8 @@ int inversa(double **A, double **resultado, int n)
 		tieneInversa=0;
 		printf("La matriz no tiene inversa. Determinante = 0\n\n");
 	}
-	else{
+	else
+	{
 		tieneInversa=1;
 		int i, j, k, l; 
 		double *tmp;
