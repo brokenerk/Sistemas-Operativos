@@ -2,7 +2,6 @@
 //	gcc tiempo.c -c
 //	gcc operacionesMatrices.c tiempo.o -o o
 
-#include <windows.h>
 #include <time.h>
 #include <errno.h>
 #include <stdio.h>
@@ -20,13 +19,7 @@ DWORD WINAPI funcionHilo(LPVOID lpParam);
 
 int main(int argc, char const *argv[])
 {
-	// Para medir el tiempo
-	clock_t tiempo_inicio, tiempo_final;
-	double segundos;
-
-	tiempo_inicio = clock();
 	int i;
-	time_t t;
 	srand((unsigned) time(&t));
 	
 	// Inicializa las matrices.
