@@ -1,0 +1,26 @@
+
+Práctica 6
+Comunicación InterProcesos (IPC) en Linux y Windows
+
+-Revisión de tuberías y memoria compartida tanto en linux como en windows
+-Revision de las llamadas al sistema para tuberias y memoria compartida en ambos s.o.
+-Desarrollo de aplicaciones concurrentes que requieren comunicacion en linux y windows
+
+--Llamadas al sistema para tuberías
+-pipe()--------------->Llamada para la creación de una tubería en Linux
+-CreatePipe()--------->Llamada para la creación de una tubería en Windows
+
+
+--Llamadas al sistema para memoria compartida
+
+-shmget()---------------------->Llamada para crear o acceder una región de memoria compartida en Linux
+-shmat()----------------------->Llamada para enlazar una región de memoria compartida al espacio 
+				De memoria de un proceso en Linux
+-CreateFileMapping()----------->Llamada para crear una región de memoria compartida en Windows
+-OpenFileMapping()------------->Llamada para acceder a una región de memoria compartida en Windows
+-MapViewOfFile()--------------->Llamada para enlazar una región de memoria compartida al espacio de 
+				Memoria de un proceso en Windows
+
+
+
+*primero ejecutar al servidor y después al proceso para evitar el mensaje de que no se puede acceder a memoria compartida.
