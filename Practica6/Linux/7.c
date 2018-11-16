@@ -96,12 +96,12 @@ int main()
 		if((pid = fork()) == 0)
 		{
 			//------------------PROCESO HIJO: SUMA
-			sleep(12);
+			sleep(11);
 
 			printf("------------------------------\n");
 			printf("Proceso HIJO leeyendo matriz 3\n");
 			leer(matriz3, n, 789);
-			sleep(2);
+			sleep(4);
 
 			printf("Proceso HIJO leeyendo matriz 4\n");
 			leer(matriz4, n, 890);
@@ -111,7 +111,7 @@ int main()
 			sleep(2);
 
 			printf("Proceso HIJO escribiendo la suma\n");
-			escribir(suma, n, 111);
+			escribir(suma, n, 654);
 			exit(0);
 		}
 		else
@@ -119,40 +119,37 @@ int main()
 			//------------------PROCESO PADRE: MULTIPLICACION
 			srand(getpid());
 			printf("------------------------------\n");
-			sleep(4);
-
-			printf("Proceso PADRE creando matriz 3\n");
-			llenar(matriz3, n); 
-			imprimir(matriz3, n);
-			sleep(1);
-
-			printf("\nProceso PADRE creando matriz 4\n");
-			llenar(matriz4, n); 
-			imprimir(matriz4, n);
-			sleep(1);
-
-			printf("Proceso PADRE escribiendo matriz 3\n");
-			escribir(matriz3, n, 789);
-			sleep(1);
-
-			printf("Proceso PADRE escribiendo matriz 4\n");
-			escribir(matriz4, n, 890);
 			sleep(1);
 
 			printf("Proceso PADRE leeyendo matriz 1\n");
 			leer(matriz1, n, 456);
-			sleep(1);
+			sleep(3);
 
 			printf("Proceso PADRE leeyendo matriz 2\n");
 			leer(matriz2, n, 678);
+			sleep(2);
 
 			printf("Proceso PADRE multiplicando matrices\n");
 			multiplicar(matriz1, matriz2, mul, n);
-			sleep(1);
 
 			printf("Proceso PADRE escribiendo la multiplicacion\n");
-			escribir(mul, n, 222);
-			sleep(1);
+			escribir(mul, n, 654);
+			sleep(2);
+
+			printf("Proceso PADRE creando matriz 3\n");
+			llenar(matriz3, n); 
+			imprimir(matriz3, n);
+
+			printf("Proceso PADRE escribiendo matriz 3\n");
+			escribir(matriz3, n, 789);
+			sleep(2);
+
+			printf("\nProceso PADRE creando matriz 4\n");
+			llenar(matriz4, n); 
+			imprimir(matriz4, n);
+
+			printf("Proceso PADRE escribiendo matriz 4\n");
+			escribir(matriz4, n, 890);
 
 			exit(0);
 		}
@@ -164,12 +161,10 @@ int main()
 		printf("Proceso ABUELO creando matriz 1\n");
 		llenar(matriz1, n); 
 		imprimir(matriz1, n);
-		sleep(1);
 
 		printf("\nProceso ABUELO creando matriz 2\n");
 		llenar(matriz2, n); 
 		imprimir(matriz2, n);
-		sleep(1);
 
 		printf("Proceso ABUELO escribiendo matriz 1\n");
 		escribir(matriz1, n, 456);
@@ -177,14 +172,14 @@ int main()
 
 		printf("Proceso ABUELO escribiendo matriz 2\n");
 		escribir(matriz2, n, 678);
-		sleep(1);
+		sleep(3.5);
 
 		printf("Proceso ABUELO leeyendo multiplicacion\n");
-		leer(mul, n, 222);
-		sleep(15);
+		leer(mul, n, 654);
+		sleep(12);
 
 		printf("Proceso ABUELO leeyendo suma\n");
-		leer(suma, n, 111);
+		leer(suma, n, 654);
 		sleep(1);
 
 		printf("Suma realizada por el Proceso HIJO:\n");
