@@ -23,8 +23,6 @@ int *shm, *z, c, d;
 
 int main()
 {
-	
-
 	// CREAR DIRECTORIO
 	// Obtenemos el directorio desde la entrada de teclado
 	char* path = leerDirectorio();
