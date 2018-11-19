@@ -13,7 +13,7 @@
 #include <sys/ipc.h>	
 #include <sys/shm.h>
 #include "funciones.h"
-#define TAM_MEM 400
+#define TAM_MEM 27
 
 void escribir(double **matriz, int n, int clave);
 void leer(double **matriz, int n, int clave);
@@ -186,7 +186,7 @@ int main()
 		printf("Escribiendo archivo TXT de inversa suma....");
 		inversa(suma, inv1, n);
 		crearArchivo(inv1, n, "/inv_suma.txt", path);
-		printf("Listo\n");
+		printf("Listo\n\n");
 
 		printf("Multiplicacion realizada por el Proceso PADRE:\n");
 		imprimir(mul, n);
@@ -194,7 +194,7 @@ int main()
 		printf("Escribiendo archivo TXT de inversa multiplicacion....");
 		inversa(mul, inv2, n);
 		crearArchivo(inv2, n, "/inv_mul.txt", path);
-		printf("Listo\n");
+		printf("Listo\n\n");
 		
 		exit(0);
 	}
