@@ -20,7 +20,6 @@ void leer(double **matriz, int n, int clave);
 char* leerDirectorio();
 int *shm, *z, c, d;
 
-
 int main()
 {
 	// CREAR DIRECTORIO
@@ -36,7 +35,6 @@ int main()
 
 	int i, n, shmid, pid;
 	double **matriz1, **matriz2, **matriz3, **matriz4, **suma, **mul, **inv1, **inv2;
-	
 	n = 10; // Tam de la matriz cuadrada
 	key_t llave = 5678;
 
@@ -74,7 +72,6 @@ int main()
 		inv2[i] = (double*)calloc(n,sizeof(double));
 
 	//---------Revisamos que se haya creado la mem compartida---------------
-
 	if((shmid = shmget(llave, TAM_MEM, IPC_CREAT | 0666)) < 0)
 	{
 		perror("Error al obtener la memoria compartida: shmget");
@@ -88,14 +85,12 @@ int main()
 	}
 
 	//--------------------Creamos los procesos-----------------------------
-
 	if((pid = fork()) == 0)
 	{
 		if((pid = fork()) == 0)
 		{
 			//------------------PROCESO HIJO: SUMA
 			sleep(11);
-
 			printf("------------------------------\n");
 			printf("Proceso HIJO leeyendo matriz 3\n");
 			leer(matriz3, n, 789);
@@ -148,11 +143,11 @@ int main()
 
 			printf("Proceso PADRE escribiendo matriz 4\n");
 			escribir(matriz4, n, 890);
-
 			exit(0);
 		}
 	}
-	else{
+	else
+	{
 		//------------------PROCESO ABUELO: Crea matrices y lee inversas
 		srand(getpid());
 		printf("------------------------------\n");
@@ -195,7 +190,6 @@ int main()
 		inversa(mul, inv2, n);
 		crearArchivo(inv2, n, "/inv_mul.txt", path);
 		printf("Listo\n\n");
-		
 		exit(0);
 	}
 	return 0;
@@ -205,7 +199,6 @@ void escribir(double **matriz, int n, int clave)
 {
 	int j, i;
 	z = shm;
-
 	for(i = 0; i < n; i++)
 	{
 		for(j = 0; j < n; j++)
@@ -245,5 +238,3 @@ char* leerDirectorio()
 	scanf("%s", directorio);
 	return directorio;
 }
-
-
