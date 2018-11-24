@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 		*shmPH = -1;
 		printf("2 MATRICES. PADRE -> HIJO. HIJO.\nMatriz 1\n");
 		
-		printf("Matriz 2\n");
+
 		
 		UnmapViewOfFile(shmPH);
 		CloseHandle(hArchMapeoPH);

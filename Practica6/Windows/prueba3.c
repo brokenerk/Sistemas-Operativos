@@ -44,9 +44,8 @@ int main(int argc, char *argv[])
 				}
 			}
 		*shmHN = -1;
-		printf("2 MATRICES. HIJO -> NIETO. NIETO.\nMatriz 1\n");
+		printf("2 MATRICES. HIJO -> NIETO. NIETO.\n");
 		
-		printf("Matriz 2\n");
 		
 
 		UnmapViewOfFile(shmHN);
