@@ -23,10 +23,10 @@ void imprimirArchivo(char *directorio, char *nombre);
 void crearArchivo(double **res, char* dir, char *nombre)
 {
     int i,j;
-    char num[15];
-    char *name = (char *)calloc(150,sizeof(char));
+    char num[20];
+    char *name = (char *)calloc(200,sizeof(char));
 	strcpy(name, nombre);
-	char *ruta = (char *)calloc(150,sizeof(char));
+	char *ruta = (char *)calloc(200,sizeof(char));
 	// Contatenamos la ruta original con el nombre del archivo
 	strcat(strcat(strcpy(ruta, dir), "\\"), name);
 
@@ -40,6 +40,7 @@ void crearArchivo(double **res, char* dir, char *nombre)
 
     if (h == INVALID_HANDLE_VALUE)
     {
+    	printf("error1\n");
     	perror(ruta);
         exit(EXIT_FAILURE);
     }
@@ -62,6 +63,7 @@ void crearArchivo(double **res, char* dir, char *nombre)
 
 				if(!escribir)
     			{
+    				printf("erro2\n");
     				perror(ruta);
         			exit(EXIT_FAILURE);
     			}
@@ -74,6 +76,7 @@ void crearArchivo(double **res, char* dir, char *nombre)
 		                    NULL);           			// no overlapped structure
 			if(!espacio)
     		{
+    			printf("erro2\n");
     			perror(ruta);
         		exit(EXIT_FAILURE);
     		}
@@ -81,6 +84,7 @@ void crearArchivo(double **res, char* dir, char *nombre)
 	    //Llamada al sistema CloseHandle recibe un descriptor de archivo y retorna un valor cero si han habido errores
 	    if(CloseHandle(h) == 0)
 	    {
+	    	printf("erro3\n");
 	    	perror(ruta);
 	    	exit(EXIT_FAILURE);
 	    }
