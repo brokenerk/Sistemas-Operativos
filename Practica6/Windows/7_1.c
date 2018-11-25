@@ -1,3 +1,6 @@
+//Compilar: gcc 7_1.c -o 7
+//Ejecutar: 7
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -5,8 +8,23 @@
 #include "funciones.h"
 #define TAM_MEM 27
 
+char* leerDirectorio()
+{
+	char* directorio = (char*)calloc(2000,sizeof(char));
+	printf("Ingrese el nuevo directorio: ");
+	scanf("%s", directorio);
+	return directorio;
+}
+
 int main(void)
 {
+	// CREAR DIRECTORIO
+	char* path = leerDirectorio();//Obtenemos el directorio desde la entrada de teclado
+	if(!CreateDirectory(path, NULL))
+	{
+			perror(path);
+	        exit(-1);
+	}
 	//Para crear el proceso
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -14,9 +32,9 @@ int main(void)
 	ZeroMemory(&si,sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
-	argv[0] = "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica6\\Windows\\prueba2";
+	argv[0] = "C:\\Users\\YaKerTaker\\Google Drive\\5to SEMESTRE\\Sistemas-Operativos\\Practica6\\Windows\\padre";
 	argv[1] = NULL;
-	double **mul, **suma, **matriz1, **matriz2;
+	double **mul, **suma, **matriz1, **matriz2, **inv1, **inv2;
 	char *HP = "HP";//Padre hijo
 	char *PH = "PH";//hijo padre
 	char *NP = "NP";//nieto padre
@@ -40,6 +58,14 @@ int main(void)
 	suma = (double**)calloc(n,sizeof(double*));
 	for (i = 0; i < n; i++)
 		suma[i] = (double*)calloc(n,sizeof(double));
+
+	inv1 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		inv1[i] = (double*)calloc(n,sizeof(double));
+
+	inv2 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		inv2[i] = (double*)calloc(n,sizeof(double));
 
 	if(!CreateProcess(NULL,argv[0],NULL,NULL,FALSE,0,NULL,NULL,&si,&pi))
 	{
@@ -108,14 +134,14 @@ int main(void)
 		exit(-1);
 	}
 	aHP = shmHP;
-		for(i = 0 ; i < 10 ; i++)
+	for(i = 0 ; i < 10 ; i++)
+	{
+		for(j = 0 ; j < 10 ; j++)
 		{
-			for(j = 0 ; j < 10 ; j++)
-			{
-				mul[i][j] = *aHP++;
-				//aHP++;
-			}
+			mul[i][j] = *aHP++;
+			//aHP++;
 		}
+	}
 	*shmHP = -1;
 	
 	imprimir(mul, n);
@@ -148,12 +174,20 @@ int main(void)
 
 	imprimir(suma, n);
 	printf("\n");
-	
+
 	UnmapViewOfFile(shmNP);
 	CloseHandle(hArchMapeoNP);
-		//invMat(A,B);
+		
+	if(inversa(mul, inv1, n) != 0){
+		crearArchivo(inv1, path, "inv_mul.txt");
+		printf("Archivo de la inversa del producto escrito.... inv_mul.txt\n");
+	}
+
+	if(inversa(suma, inv2, n) != 0){
+		crearArchivo(inv2, path, "inv_suma.txt");
+		printf("Archivo de la inversa de la suma escrito.... inv_suma.txt\n");
+	}
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
-
 	return 0;
 }

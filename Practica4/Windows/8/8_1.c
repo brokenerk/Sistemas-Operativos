@@ -120,18 +120,17 @@ int main(int argc, char const *argv[])
     printf("\nINVERSA MATRIZ 1\n"); imprimirArchivo(path, "inversa_1.txt");
     printf("\nINVERSA MATRIZ 2\n"); imprimirArchivo(path, "inversa_2.txt");
 
-<<<<<<< HEAD
+
 	clock_t end = clock();
 	float seconds = (float)(end - start) / CLOCKS_PER_SEC;;
 	printf("Tiempo de ejecucion: %f\n", seconds);
 	
-=======
+
     tiempo_final = clock();
     segundos = (double)(tiempo_final - tiempo_inicio) / CLOCKS_PER_SEC;
     //Cálculo del tiempo de ejecución del programa
 	printf("\n\nTiempo ejecucion:  %.4f s\n",  segundos);
 
->>>>>>> be0b38c9e5485f06bc3fe10ac23a6eaf18a4049f
 	return 0;
 }
 
