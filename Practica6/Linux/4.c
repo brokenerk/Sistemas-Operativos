@@ -3,224 +3,152 @@
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#define MATRIX_SIZE 10
-#define DIR_MATRIX_MUL "matrix_mul.txt"
-#define DIR_MATRIX_SUM "matrix_sum.txt"
-
-void imprimeMatriz(double*);
-void imprimeMatrizArchivo(char*,double*);
-void initMatrizRandom(double*);
-void initIdentidad(double*);
-void copiarMatriz(double*, double*);
-void sumMatriz(double*, double*, double*);
-void mulMatriz(double*, double*, double*);
-void invMatriz(double*, double*);
-
+#include "funciones.h"
+char* leerDirectorio();
 
 int main(void)
 {
-  int pipefd_0_1[2];
-  int pipefd_1_0[2];
-  int pipefd_1_2[2];
-  int pipefd_2_0[2];
-  double matrixA[MATRIX_SIZE*MATRIX_SIZE];
-  double matrixB[MATRIX_SIZE*MATRIX_SIZE];
-  double res[MATRIX_SIZE*MATRIX_SIZE];
-
-  if (pipe (pipefd_0_1) != 0 || pipe (pipefd_1_0) != 0 || pipe (pipefd_1_2) != 0 || pipe (pipefd_2_0) != 0)
-  {
-    exit(1);
-  }
-
-  if (fork()) 
-  { //0
-    srand(getpid());
-    initMatrizRandom(matrixA);
-    initMatrizRandom(matrixB);
-
-    printf("MATRIZ A\n"); imprimeMatriz(matrixA);
-    printf("\nMATRIZ B\n"); imprimeMatriz(matrixB);
-
-    write(pipefd_0_1[1], matrixA, sizeof(matrixA)); 
-    write(pipefd_0_1[1], matrixB, sizeof(matrixB));
-
-    read(pipefd_1_0[0], res, sizeof(res));
-    printf("\nMultiplicacion realizada por el Proceso PADRE:\n");
-    imprimeMatriz(res);
-    printf("\nEscribiendo archivo TXT de inversa multiplicacion.... %s", DIR_MATRIX_MUL);
-    invMatriz(res, matrixA);
-    //imprimeMatriz(matrixA);
-    imprimeMatrizArchivo(DIR_MATRIX_MUL, matrixA);
-    printf(" Listo\n\n");
-
-    read(pipefd_2_0[0], res, sizeof(res));
-    printf("Suma realizada por el Proceso HIJO:\n");
-    imprimeMatriz(res);
-    printf("\nEscribiendo archivo TXT de inversa suma.... %s", DIR_MATRIX_SUM);
-    invMatriz(res, matrixA);
-    //imprimeMatriz(matrixA);
-    imprimeMatrizArchivo(DIR_MATRIX_SUM, matrixA);
-    printf(" Listo\n\n");
-
-    exit(0);
-  }
-  else
+	// CREAR DIRECTORIO
+	// Obtenemos el directorio desde la entrada de teclado
+	char* path = leerDirectorio();
+	//Llamda al sistema mkdir recibe la ruta del directorio a crear, y los permisos de escritura, lectura y ejecucion para cada tipo de usuario
+	//Retorna -1 si ocurrieron errores
+	if(mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) ==-1)
 	{
-      if (fork())
+		perror(path);
+        exit(EXIT_FAILURE);
+    }
+
+	int n = 10, i, j;
+	int pipefd_0_1[2];
+	int pipefd_1_0[2];
+	int pipefd_1_2[2];
+	int pipefd_2_0[2];
+	double **matrixA, **matrixB, **mul, **suma, **inv1, **inv2;
+
+	// Inicializa las matrices.
+	matrixA = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		matrixA[i] = (double*)calloc(n,sizeof(double));
+
+	matrixB = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		matrixB[i] = (double*)calloc(n,sizeof(double));
+
+	mul = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		mul[i] = (double*)calloc(n,sizeof(double));
+
+	suma = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		suma[i] = (double*)calloc(n,sizeof(double));
+
+	inv1 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		inv1[i] = (double*)calloc(n,sizeof(double));
+
+	inv2 = (double**)calloc(n,sizeof(double*));
+	for (i = 0; i < n; i++)
+		inv2[i] = (double*)calloc(n,sizeof(double));
+
+	if (pipe (pipefd_0_1) != 0 || pipe (pipefd_1_0) != 0 || pipe (pipefd_1_2) != 0 || pipe (pipefd_2_0) != 0)
+	{
+	exit(1);
+	}
+
+	if (fork()) 
+	{ //0
+	    srand(getpid());
+	    llenar(matrixA, n);
+	    llenar(matrixB, n);
+
+	    printf("MATRIZ A\n"); imprimir(matrixA, n);
+	    printf("\nMATRIZ B\n"); imprimir(matrixB, n);
+
+	    for(i = 0; i < n; i++){
+	    	for(j = 0; j < n; j++){
+	    		write(pipefd_0_1[1], &matrixA[i][j], sizeof(double)); 
+	    		write(pipefd_0_1[1], &matrixB[i][j], sizeof(double));
+	    	}	
+	    }
+    
+		for(i = 0; i < n; i++){
+			for(j = 0; j < n; j++){
+				read(pipefd_1_0[0], &mul[i][j], sizeof(double));
+				read(pipefd_2_0[0], &suma[i][j], sizeof(double));
+			}
+		}
+
+		printf("\nMultiplicacion realizada por el Proceso PADRE:\n");
+		imprimir(mul, n);
+		printf("Escribiendo archivo TXT de inversa multiplicacion....");
+		inversa(mul, inv1, n);
+		crearArchivo(inv1, n, "/inv_mul.txt", path);
+		printf("Listo\n\n");
+
+		printf("Suma realizada por el Proceso HIJO:\n");
+		imprimir(suma,n);
+		printf("Escribiendo archivo TXT de inversa suma....");
+		inversa(suma, inv2, n);
+		crearArchivo(inv2, n, "/inv_suma.txt", path);
+		printf("Listo\n\n");
+
+		exit(0);
+  	}
+  	else
+	{
+      	if (fork())
         { // 1
-          srand(getpid());
-          initMatrizRandom(matrixA);
-          initMatrizRandom(matrixB);
-          printf("\nMATRIZ C\n"); imprimeMatriz(matrixA);
-      	   printf("\nMATRIZ D\n"); imprimeMatriz(matrixB);
+			srand(getpid());
+			llenar(matrixA, n);
+			llenar(matrixB, n);
+			printf("\nMATRIZ C\n"); imprimir(matrixA, n);
+			printf("\nMATRIZ D\n"); imprimir(matrixB, n);
 
-        	write(pipefd_1_2[1], matrixA, sizeof(matrixA));
-        	write(pipefd_1_2[1], matrixB, sizeof(matrixB));
+			for(i = 0; i < n; i++){
+				for(j = 0; j < n; j++){
+					write(pipefd_1_2[1], &matrixA[i][j], sizeof(double));
+			    	write(pipefd_1_2[1], &matrixB[i][j], sizeof(double));
 
-        	read(pipefd_0_1[0],matrixA, sizeof(matrixA));
-        	read(pipefd_0_1[0],matrixB, sizeof(matrixB));
+			    	read(pipefd_0_1[0], &matrixA[i][j], sizeof(double));
+			    	read(pipefd_0_1[0], &matrixB[i][j], sizeof(double));
+				}
+			}
 
-        	mulMatriz(matrixA, matrixB, res);
+			multiplicar(matrixA, matrixB, mul, n);
 
-        	write(pipefd_1_0[1], res, sizeof(res));
-
-        	exit(0);
-        }
+			for(i = 0; i < n; i++){
+				for(j = 0; j < n; j++){
+					write(pipefd_1_0[1], &mul[i][j], sizeof(double));
+				}
+			}
+			exit(0);
+		}
         else 
         { // 2
-          read(pipefd_1_2[0],matrixA, sizeof(matrixA));
-          read(pipefd_1_2[0],matrixB, sizeof(matrixB));
+        	for(i = 0; i < n; i++){
+		    	for(j = 0; j < n; j++){
+		    		read(pipefd_1_2[0], &matrixA[i][j], sizeof(double));
+          			read(pipefd_1_2[0], &matrixB[i][j], sizeof(double));
+		    	}
+		    }
+          
 
-          sumMatriz(matrixA, matrixB, res);
-
-          write(pipefd_2_0[1], res, sizeof(res));
-
-          exit(0);
-      }
-  }
-}
-
-void imprimeMatriz(double* matrix)
-{
-  int i,j;
-  for (j = 0; j < 10; j++)
-  {
-      for (i = 0; i < 10; i++)
-      {
-          printf("%.3f\t",matrix[i+j*10]);
-      }
-      printf("\n");
-  }
-}
-
-void imprimeMatrizArchivo (char *fileDir, double* matrix)
-{
-  char buff[16];
-  int file = creat(fileDir, S_IRWXU | S_IRWXG | S_IRWXO);
-  int i;
-
-  if (file != -1)
- 	{
-    for (i = 0; i <  100; i++)
-    {
-        
-        if ((i+1)%10 == 0)
-        {
-          sprintf(buff,"\n");
-          write(file, buff, strlen(buff));
-        }
-        else
-        {
-          sprintf(buff,"%.3f\t",matrix[i]);
-          write(file, buff, strlen(buff));
-        }
-    }
-  }
-  else
-  {
-      printf("NO SE PUEDE MANDAR AL ARCHIVO %s\n",fileDir);
-  }
-  close(file);
-}
-
-void initMatrizRandom(double* matrix)
-{
-  int i,j;
-  for (j = 0; j < 10; j++)
-  {
-      for (i = 0; i < 10; i++)
-      {
-          matrix[i+j*10] = rand() % 11;
-      }
-  }
-}
-
-void initIdentidad(double* matrix)
-{
-  int i,j;
-  for (j = 0; j < 10; j++)
-  {
-    	for (i = 0; i < 10; i++)
-    {
-      matrix[i+j*10] = i==j ? 1 : 0;
-    }
-	}
-}
-
-void copiarMatriz(double* mS, double* mD)
-{
-  int i;
-  for (i = 0; i < 100; i++)
-  		mD[i] = mS[i];
-}
-
-void sumMatriz(double* mA, double* mB, double* res)
-{
-	int i;
-	for (i = 0; i < 100; i++)
-    	res[i] = mA[i] + mB[i];
-}
-
-void mulMatriz(double* mA, double* mB, double* res)
-{
-	int i, c, sum;
-	for (i = 0; i < 100; i++)
-	{
-    sum = 0;
-    for (c=0; c<10; c++)
-        sum += mA[(i/10)*10 + c] * mB[c*10 + i%10];
-    res[i] = sum;
-  }
-}
-
-void invMatriz(double* mA, double* res)
-{
-  int n, i, j;
-  double pivot;
-  double aux[100];
-  copiarMatriz(mA, aux);
-  initIdentidad(res);
-  for (n=0; n<10; n++)
-	{
-  	pivot = aux[n + n*10];
-  	for (i=0; i < 10; i++)
-    {
-        aux[i + n*10] /= pivot;
-        res[i + n*10] /= pivot;
-    }
-
-  	for (j=0; j<10; j++)
-    {
-      if (j != n)
-      {
-        pivot = aux[n + j*10];
-        for (i=0; i<10; i++)
-      	{
-        	aux[i + j*10] -= pivot*aux[i + n*10];
-        	res[i + j*10] -= pivot*res[i + n*10];
+			sumar(matrixA, matrixB, suma, n);
+			for(i = 0; i < n; i++){
+		    	for(j = 0; j < n; j++){
+		    		write(pipefd_2_0[1], &suma[i][j], sizeof(double));
+		    	}
+		    }
+			exit(0);
       	}
-      }
-    }
-	}
+	}	
 }
 
+char* leerDirectorio()
+{
+	char* directorio = (char*)calloc(2000,sizeof(char));
+	printf("Ingrese el nuevo directorio: ");
+	scanf("%s", directorio);
+	return directorio;
+}
