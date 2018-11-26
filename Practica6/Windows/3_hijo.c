@@ -5,6 +5,7 @@
 
 int main()
 {
+	//printf("LLEGUE AL HIJO\n");
 	char mensaje[20];
 	DWORD leidos;
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
