@@ -1,0 +1,14 @@
+Practica 7 Mecanismos de sincronización de procesos en Linux y Windows (Semáforos)
+
+* Revisión de la creación de semáforos en Linux y Windows.
+* Revisión de las llamadas al Sistema para semáforos en ambos sistemas operativos.
+* Desarrollo de aplicaciones con sincronización por semáforos en Linux y Windows.
+
+---> Llamadas al sistema para semáforos en Linux:
+	- semget()	Llamada para la creación o acceso a un grupo de semáforos.
+	- semop()	Llamada para realizar más operaciones sobre el semáforo.
+
+---> Llamadas al sistema para semáforos en Windows:
+	- CreateSemaphore()			Llamada para la creación de un semáforo.
+	- OpenSemaphore()			Llamada para acceder a un semáforo.
+	- WaitForSingleObject()		Llamada para realizar las operaciones sobre el semáforo.
