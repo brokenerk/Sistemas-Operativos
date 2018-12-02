@@ -19,7 +19,6 @@ void repetir(int i)
 	if(i == 0)
 	{
 		float *p = crearMemoria("mem");
-
 		// ------------------------------------------- CREAR DOS MATRICES
 		double **matriz1, **matriz2;
 
@@ -35,9 +34,11 @@ void repetir(int i)
 		// Llena matriz 1 y matriz 2
 		llenar(matriz1, n);
 		llenar(matriz2, n);
+		// IMPRIMO MATRICES
+		printf("MATRIZ 1\n"); imprimir(matriz1, n);
+		printf("MATRIZ 2\n"); imprimir(matriz2, n);
 
 		//-------------------------------------------- ENVIA MATRICES 
-
 		printf("Envia matriz 1\n\n");
 		escribir(matriz1, p);
 		ReleaseSemaphore(hSem[0], 1, NULL);
@@ -48,7 +49,6 @@ void repetir(int i)
 		ReleaseSemaphore(hSem[0], 1, NULL);
 		WaitForSingleObject(hSem[1], INFINITE);
 		
-		
 		// ----------------------------------------- CREAR MATRIZ 
 		double **mul;
 
@@ -57,15 +57,13 @@ void repetir(int i)
 		for (i = 0; i < n; i++)
 			mul[i] = (double*)calloc(n,sizeof(double));
 
-		// IMPRIMO MATRICES
-		printf("MATRIZ 1\n"); imprimir(matriz1, n);
-		printf("MATRIZ 2\n"); imprimir(matriz2, n);
-		
 		// ----------------------------------------- RECIBE MATRIZ MULTIPLICACION
 		printf("Recibe multiplicacion:\n");
 		leer(mul, p);
+		printf("RESULTADO DE LA MULTIPLICACION MATRIZ 1 Y MATRIZ 2\n"); 
+		imprimir(mul, n);
 		ReleaseSemaphore(hSem[0], 1, NULL);
-		printf("RESULTADO DE LA MULTIPLICACION MATRIZ 1 Y MATRIZ 2\n"); imprimir(mul, n);
+		
 
 		// ----------------------------------------- CREAR MATRIZ 
 		double **suma;
@@ -76,14 +74,14 @@ void repetir(int i)
 			suma[i] = (double*)calloc(n,sizeof(double));
 		
 		//--------------------------- RECIBE MATRIZ SUMA
-
 		WaitForSingleObject(hSem[4], INFINITE);
-		printf("Recibe suma :\n");
+		printf("Recibe suma:\n");
 		leer(suma, p);
 		ReleaseSemaphore(hSem[0], 1, NULL);
 		
 		// IMPRIME ELEMENTOS DE LA SUMA 
-		printf("RESULTADO DE LA SUMA DE LA MATRIZ A Y MATRIZ B\n"); imprimir(suma, n);
+		printf("RESULTADO DE LA SUMA DE LA MATRIZ A Y MATRIZ B\n"); 
+		imprimir(suma, n);
 		
 
 		//--------------------------- CREAR DOS MATRICES
@@ -113,14 +111,13 @@ void repetir(int i)
 		if(inversa(suma, invSuma, n) != 0) 
 			crearArchivo(invSuma, path, "inversa_Suma.txt");	
 
-		printf("INVERSA SUMA\n"); imprimir(invSuma, n);
-		printf("INVERSA MULTIPLICACION\n"); imprimir(invMul, n);
+		printf("INVERSA SUMA escrita.... Ok\n"); //imprimir(invSuma, n);
+		printf("INVERSA MULTIPLICACION escrita... Ok\n"); //imprimir(invMul, n);
 
 	}
 	else if(i == 1)
 	{
 		float *p = leerMemoria("mem");
-
 		//--------------------------- CREAR DOS MATRICES
 		double **A, **B;
 	
@@ -135,12 +132,12 @@ void repetir(int i)
 
 		//--------------------------- RECIBIR MATRICES 
 		WaitForSingleObject(hSem[0], INFINITE);
-		printf("Recibe matriz 1:\n");
+		printf("Recibe matriz 1\n");
 		leer(A, p);
 		ReleaseSemaphore(hSem[1], 1, NULL);
 
 		WaitForSingleObject(hSem[0], INFINITE);
-		printf("Recibe matriz 2:\n");
+		printf("Recibe matriz 2\n");
 		leer(B, p);
 
 		//--------------------------- CREAR MATRIZ 
@@ -154,7 +151,6 @@ void repetir(int i)
 		//--------------------------- CALCULA MULTIPLICACION
 		printf("Multiplica matriz 1 y matriz 2\n");
 		multiplicar(A, B, AB, n); 
-		imprimir(AB, n);
 
 		printf("Envia multiplicacion de matriz 1 y matriz 2\n\n");
 		escribir(AB, p);
@@ -175,25 +171,25 @@ void repetir(int i)
 
 		// Llena matriz 1 y matriz 2
 		llenar(M1, n);
+		printf("MATRIZ A\n"); imprimir(M1, n);
 		llenar(M2, n);
+		printf("MATRIZ B\n"); imprimir(M2, n);
 
 		//--------------------------- ENVIA MATRICES A SU HIJO
 		printf("Envia matriz A\n\n");
 		escribir(M1, p);
 		ReleaseSemaphore(hSem[2], 1, NULL);
 		WaitForSingleObject(hSem[3], INFINITE);
-		printf("MATRIZ A\n"); imprimir(M1, n);
-
+		
 		printf("Envia matriz B\n\n");
 		escribir(M2, p);
 		ReleaseSemaphore(hSem[2], 1, NULL);
 		WaitForSingleObject(hSem[3], INFINITE);
-		printf("MATRIZ B\n"); imprimir(M2, n);
+		
 	}
 	else if(i == 2)
 	{
 		float *p = leerMemoria("mem");
-
 		//--------------------------- CREAR DOS MATRICES
 		double **sumaA, **sumaB;
 	
@@ -207,14 +203,13 @@ void repetir(int i)
 			sumaB[i] = (double*)calloc(n,sizeof(double));	
 
 		//--------------------------- RECIBIR MATRICES 
-
 		WaitForSingleObject(hSem[2], INFINITE);
-		printf("Recibe matriz A:\n");
+		printf("Recibe matriz A\n");
 		leer(sumaA, p);
 		ReleaseSemaphore(hSem[3], 1, NULL);
 
 		WaitForSingleObject(hSem[2], INFINITE);
-		printf("Recibe matriz B:\n");
+		printf("Recibe matriz B\n");
 		leer(sumaB, p);
 
 		//--------------------------- CREAR MATRIZ 
@@ -252,7 +247,6 @@ int main(int argc, char *argv[])
 	srand(time(NULL));
 	int nivel = 0; //0-padre, 1-hijo, 2-nieto
 	if(argc > 1) sscanf(argv[1], "%d", &nivel);
-
 	crearSems(nivel);
 	if(nivel < 2) proceso(argv[0], nivel + 1);
 	repetir(nivel);
@@ -267,6 +261,7 @@ char* leerDirectorio()
 	scanf("%s", directorio);
 	return directorio;
 }
+
 void escribir(double  **A, float *p)
 {
 	int i, j;

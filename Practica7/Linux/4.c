@@ -239,7 +239,7 @@ void encender(int semid)
 
 	if (semop(semid, &sops, 1) == -1)
 	{
-		perror ("semop: error al encender el semaforo %d\n", semid);
+		perror("semop: error al encender el semaforo\n");
 		exit(-1);
 	}
 	printf("\n------------SEMAFORO %d: ENCENDIDO--------------\n", semid);
@@ -254,7 +254,7 @@ void apagar(int semid)
 
 	if (semop(semid, &sops, 1) == -1)
 	{
-		perror ("semop: error al encender el semaforo %d\n", semid);
+		perror("semop: error al encender el semaforo\n");
 		exit(-1);
 	}
 	printf("\n------------SEMAFORO %d: APAGADO--------------\n", semid);
