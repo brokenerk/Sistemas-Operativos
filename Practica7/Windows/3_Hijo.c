@@ -1,3 +1,5 @@
+/* Programa hijo 
+Compilar: 3_Hijo.c -o hijo*/
 #include <windows.h>
 #include <stdio.h>
 
@@ -7,7 +9,7 @@ int main()
 	int i = 1;
 
 	// Apertura del semáforo
-	if((hSemaforo == OpenSemaphore(SEMAPHORE_ALL_ACCESS, FALSE, "Semaforo")) == NULL )
+	if((hSemaforo = OpenSemaphore(SEMAPHORE_ALL_ACCESS, FALSE, "Semaforo")) == NULL )
 	{
 		printf("Falla al invocar OpenSemaphore %d\n", GetLastError());
 		return -1;

@@ -1,4 +1,6 @@
-/* Programa padre */
+/* Programa padre 
+Compilar: 3_Padre.c -o 3
+Ejecutar: 3 hijo*/
 #include <windows.h>
 #include <stdio.h>
 
@@ -15,7 +17,7 @@ int main(int argc, char *argv[])
 	if(argc!=2)
 	{
 		printf("Usar:%s Nombre_programa_hijo\n", argv[0]);
-		return;
+		return -1;
 	}
 	 
 	if((hSemaforo = CreateSemaphore(NULL, 1, 1, "Semaforo")) == NULL)

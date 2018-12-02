@@ -44,7 +44,6 @@ int main (void)
 			sops [1].sem_num = 0;
 			sops [1].sem_op = 1;
 			sops [1].sem_flg = SEM_UNDO | IPC_NOWAIT;	
-
 			printf ("semop: hijo llamando a semop (%d, &sops, %d) con:", semid, nsops);
 
 			for (j = 0; j < nsops; j++)
@@ -125,7 +124,9 @@ int main (void)
 			}
 			++i;
 		}	
+		exit(0);
 	}
+	return 0;
 }
 
 

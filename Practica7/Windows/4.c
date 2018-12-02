@@ -32,8 +32,7 @@ void repetir(int i)
 			matriz2[i] = (double*)calloc(n,sizeof(double));
 
 		// Llena matriz 1 y matriz 2
-		llenar(matriz1, n);
-		llenar(matriz2, n);
+		llenar(matriz1, n); llenar(matriz2, n);
 		// IMPRIMO MATRICES
 		printf("MATRIZ 1\n"); imprimir(matriz1, n);
 		printf("MATRIZ 2\n"); imprimir(matriz2, n);
@@ -51,7 +50,6 @@ void repetir(int i)
 		
 		// ----------------------------------------- CREAR MATRIZ 
 		double **mul;
-
 		// Inicializa las matrices.
 		mul = (double**)calloc(n,sizeof(double*));
 		for (i = 0; i < n; i++)
@@ -67,7 +65,6 @@ void repetir(int i)
 
 		// ----------------------------------------- CREAR MATRIZ 
 		double **suma;
-
 		// Inicializa las matrices.
 		suma = (double**)calloc(n,sizeof(double*));
 		for (i = 0; i < n; i++)
