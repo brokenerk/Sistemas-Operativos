@@ -19,7 +19,6 @@ void leer(double **matriz, int n, double *shm);
 void encender(int semid);
 void apagar(int semid);
 char* leerDirectorio();
-double *z;
 
 int main()
 {
@@ -34,10 +33,9 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-	int i, n, shmid1, shmid2, pid, semaforo0, semaforo1;
+	int i, n = 10, shmid1, shmid2, semaforo0, semaforo1;
 	double **matriz1, **matriz2, **matriz3, **matriz4, **suma, **mul, **inv1, **inv2, *shm1, *shm2;
-	n = 10; // Tam de la matriz cuadrada
-	key_t llave1 = 5678, llave2 = 7890;
+	key_t llave1 = 5678, llave2 = 5679;
 
 	// Inicializa las matrices.
 	matriz1 = (double**)calloc(n,sizeof(double*));
@@ -91,9 +89,11 @@ int main()
 		exit(-1);
 	}
 
+	//---------Inicializamos los semaforos --> apagados---------------
 	if ((semctl(semaforo0, 0, SETVAL, 0) == -1) || (semctl(semaforo1, 0, SETVAL, 0) == -1))
     {
-      printf ("Error al crear los semaforos: semctl\n");
+		printf ("Error al crear los semaforos: semctl\n");
+		exit(-1);
     }
 
 	printf("------------SEMAFOROS(2) INICIADOS--------------\n");
@@ -120,13 +120,11 @@ int main()
 
 			//--------ENCENDER SEMAFORO 1-----------
 			encender(semaforo1);
-
 		}
 		else
 		{
 			//------------------PROCESO PADRE: MULTIPLICACION
 			srand(getpid());
-
 			printf("------------------------------\n");
 
 			printf("Proceso PADRE leeyendo matriz 1\n");
@@ -191,7 +189,6 @@ int main()
 		
 		printf("\nMultiplicacion realizada por el Proceso PADRE:\n");
 		imprimir(mul, n);
-
 		printf("Escribiendo archivo TXT de inversa multiplicacion....");
 		inversa(mul, inv2, n);
 		crearArchivo(inv2, n, "/inv_mul.txt", path);
@@ -203,7 +200,6 @@ int main()
 
 		printf("\nSuma realizada por el Proceso HIJO:\n");
 		imprimir(suma, n);
-
 		printf("Escribiendo archivo TXT de inversa suma....");
 		inversa(suma, inv1, n);
 		crearArchivo(inv1, n, "/inv_suma.txt", path);
@@ -243,7 +239,8 @@ void encender(int semid)
 
 	if (semop(semid, &sops, 1) == -1)
 	{
-		perror ("semop: semop: error al encender el semaforo 0\n");
+		perror ("semop: error al encender el semaforo %d\n", semid);
+		exit(-1);
 	}
 	printf("\n------------SEMAFORO %d: ENCENDIDO--------------\n", semid);
 }
@@ -257,7 +254,8 @@ void apagar(int semid)
 
 	if (semop(semid, &sops, 1) == -1)
 	{
-		perror ("semop: semop: error al encender el semaforo 0\n");
+		perror ("semop: error al encender el semaforo %d\n", semid);
+		exit(-1);
 	}
 	printf("\n------------SEMAFORO %d: APAGADO--------------\n", semid);
 }
