@@ -62,7 +62,6 @@ void repetir(int i)
 		imprimir(mul, n);
 		ReleaseSemaphore(hSem[0], 1, NULL);
 		
-
 		// ----------------------------------------- CREAR MATRIZ 
 		double **suma;
 		// Inicializa las matrices.
@@ -80,7 +79,6 @@ void repetir(int i)
 		printf("RESULTADO DE LA SUMA DE LA MATRIZ A Y MATRIZ B\n"); 
 		imprimir(suma, n);
 		
-
 		//--------------------------- CREAR DOS MATRICES
 		double **invMul, **invSuma;
 	

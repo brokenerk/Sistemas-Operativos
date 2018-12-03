@@ -98,7 +98,6 @@ int main()
 
 	printf("------------SEMAFOROS(2) INICIADOS--------------\n");
 
-
 	//--------------------Creamos los procesos-----------------------------
 	if(fork() == 0)
 	{
@@ -259,7 +258,6 @@ void apagar(int semid)
 	}
 	printf("\n------------SEMAFORO %d: APAGADO--------------\n", semid);
 }
-
 
 char* leerDirectorio()
 {
