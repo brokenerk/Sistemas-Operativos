@@ -30,7 +30,7 @@ int main(void)
 	else{
 		write(tuberia1[1], mensaje, strlen(mensaje)+1);
 		read(tuberia2[0], men, MAX);
-		printf("PADRE: Mensaje recibido: %s\n", mensaje);
+		printf("PADRE: Mensaje recibido: %s\n", men);
 		wait(0);
 	}
 	exit(0);
